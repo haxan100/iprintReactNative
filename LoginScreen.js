@@ -1,77 +1,173 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Button, Text, TouchableOpacity, Image } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  StatusBar,
+  Image, // Tambahkan ini
 
-const LoginScreen = ({ navigation }) => {
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5'; // Untuk FontAwesome
+import Entypo from 'react-native-vector-icons/Entypo'; // Untuk Entypo\
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Untuk FontAwesome
+import backgroundImage from './assets/images/bg.png';
+
+const LoginScreen = () => {
+  
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
+  const [eyeIcon, setEyeIcon] = useState('eye-slash');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Fungsi untuk menangani aksi login
   const handleLogin = () => {
-    // Logika untuk menangani login akan di sini
-    // Misalnya memanggil API login
+    // Implementasi proses login
+  };
+  const togglePasswordVisibility = () => {
+    setPasswordVisibility(!passwordVisibility);
+    setEyeIcon(eyeIcon === 'eye' ? 'eye-slash' : 'eye');
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: 'https://www.iprint.id/wp-content/uploads/2023/05/logo-iprint-blue.png' }} style={styles.logo} />
-      <TouchableOpacity style={styles.googleButton}>
-        <Text>Lanjutkan dengan Google</Text>
-      </TouchableOpacity>
-      <Text style={styles.orStyle}>Atau</Text>
+    <ImageBackground   source={backgroundImage}
+        style={styles.backgroundImage}>
+      <StatusBar barStyle="light-content" />
+      <View style={styles.container}>
+      <Image 
+          source={{ uri: 'https://www.iprint.id/wp-content/uploads/2023/05/logo-iprint-blue.png' }} 
+          style={styles.logo} 
+        />
       <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <Button title="Log in" onPress={handleLogin} />
-      <TouchableOpacity>
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#BDBDBD"
+          onChangeText={setEmail}
+          value={email}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          placeholderTextColor="#BDBDBD"
+          onChangeText={setPassword}
+          value={password}
+          secureTextEntry
+          autoCapitalize="none"
+        />
+
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
+          <Text style={styles.loginButtonText}>Log in</Text>
+        </TouchableOpacity>
         <Text style={styles.forgotPassword}>Lupa password?</Text>
-      </TouchableOpacity>
-      <TouchableOpacity>
         <Text style={styles.signUp}>Belum memiliki akun? Buat Disini</Text>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFF',
   },
-  input: {
-    height: 40,
-    marginVertical: 10,
-    borderWidth: 1,
-    padding: 10,
-    width: '80%',
-    borderRadius: 5,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
+  container: {
+    paddingHorizontal: 20,
   },
   googleButton: {
-    // Gaya untuk tombol Google
+    flexDirection: 'row',
+    backgroundColor: '#DB4437',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
   },
-  orStyle: {
-    // Gaya untuk teks "Atau"
+  googleButtonText: {
+    fontSize: 16,
+    color: 'white',
+    marginLeft: 10,
+  },
+  orText: {
+    color: 'white',
+    textAlign: 'center',
+    marginVertical: 15,
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    marginVertical: 10,
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    shadowColor: '#000',
+    shadowOffset: { height: 1, width: 0 },
+    elevation: 2,
+    width: '100%',
+  },
+  eyeIcon: {
+    padding: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    backgroundColor: 'white', // Background warna putih agar teks hitam terlihat
+    color: 'black', // Warna teks
+    borderRadius: 25,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    fontSize: 16,
+    marginVertical: 10,
+    shadowOpacity: 0.2, // Bayangan untuk iOS
+    shadowRadius: 3,
+    shadowColor: '#000',
+    shadowOffset: { height: 1, width: 0 },
+    elevation: 2, // Bayangan untuk Android
+    width: '100%',
+  },
+  loginButton: {
+    backgroundColor: '#E53935',
+    borderRadius: 20,
+    flexDirection: 'row',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 3,
+    marginTop: 10,
+  },
+  loginButtonText: {
+    color: 'white',
+    marginLeft: 10,
+    fontSize: 16,
   },
   forgotPassword: {
-    color: 'blue',
+    textAlign: 'center',
+    color: 'white',
+    marginTop: 20,
+    textDecorationLine: 'underline',
   },
   signUp: {
-    color: 'blue',
+    textAlign: 'center',
+    color: 'white',
+    marginTop: 5,
+    textDecorationLine: 'underline',
+  },
+  logo: {
+    width: 200, // Atur lebar sesuai kebutuhan
+    height: 100, // Atur tinggi sesuai kebutuhan
+    resizeMode: 'contain', // Pastikan logo tidak terpotong
+    alignSelf: 'center', // Taruh logo di tengah
+    marginVertical: 20, // Tambahkan margin atas dan bawah
   },
 });
 
