@@ -1,8 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure this package is installed
+import { BackHandler } from 'react-native';
+import Axios from 'axios';
+import FormData from 'form-data';
 
 const ResetPasswordScreen = ({ navigation, route }) => {
+  useEffect(() => {
+    const backAction = () => {
+      Alert.alert('Error', 'Anda Tidak Dapat Kembali, Mohon tunggu Di Halaman ini.');
+      // Ketika tombol kembali ditekan, tidak lakukan apa-apa, atau bisa juga memberikan peringatan.
+      return true;  // Mengembalikan nilai `true` menandakan kita telah menangani back press.
+    };
+  
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', backAction);
+  
+    return () => backHandler.remove();
+  }, []);
+
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [resetPassKey, setResetPassKey] = useState(route.params?.reset_pass_key || '');
@@ -13,26 +28,26 @@ const ResetPasswordScreen = ({ navigation, route }) => {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
-
+  
     if (newPassword !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match.');
       return;
     }
-
-    // TODO: Implement API call to reset password here
-    // After the API call, navigate to the login screen or dashboard as appropriate
-
+  
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('reset_pass_key', resetPassKey);
+    formData.append('id_user', id_user); // Make sure `id_user` is declared and assigned appropriately
+    formData.append('password', newPassword);
+    formData.append('re_password', confirmPassword);
+  
     try {
-      // Assuming you have the API endpoint to reset the password
       const response = await Axios.post(
-        '{{url}}/api/reset_password',
-        {
-          reset_pass_key: resetPassKey,
-          password: newPassword,
-          password_confirmation: confirmPassword,
-        },
+        'http://heyiamhasan.com/porto/iprintNew/api/ganti_password',
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
-
+  
       if (response.data.status) {
         Alert.alert('Success', 'Your password has been reset.', [
           { text: 'OK', onPress: () => navigation.navigate('Login') },
@@ -105,8 +120,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
+    marginTop: 10,
   },
   input: {
+    color: '#aae',
     flex: 1,
     padding: 10,
     borderWidth: 1,
