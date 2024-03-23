@@ -1,8 +1,10 @@
 import React, { useState,useEffect  } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image ,Alert } from 'react-native';
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
 import { formatRupiah } from './utils/currencyUtils';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
+import FormData from 'form-data';
 
 // Data dummy, gantikan dengan state yang menyimpan data keranjang belanja Anda
 const cartItems = [
@@ -19,7 +21,7 @@ const cartItems = [
 ];
 
 
-const CartScreen = ({navigation}) => {
+const CartScreen = ({navigation,onDelete }) => {
   const [cartData, setCartData] = useState([]);
 
   const [cart, setCart] = useState(cartItems);
@@ -58,7 +60,7 @@ const CartScreen = ({navigation}) => {
     // Implement your action here, such as navigating to a confirmation screen
     // or directly handling the order logic
   };
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item  }) => (
     <View style={styles.itemContainer}>
       <Image source={{ uri: item.gambar }} style={styles.itemImage} />
       <View style={styles.itemDetail}>
@@ -74,10 +76,60 @@ const CartScreen = ({navigation}) => {
         >
           <Text style={styles.orderButtonText}>Pesan Sekarang</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeletePress({item})}>
+          <MaterialCommunityIcons name="trash-can-outline" size={24} color="#D11A2A" />
+        </TouchableOpacity>
         </View>
       </View>
     </View>
   );
+  const handleDeletePress = ({ item,  }) => {
+    console.log(item)
+    Alert.alert(
+      "Konfirmasi Hapus",
+      "Apakah kamu yakin akan menghapus keranjang ini?",
+      [
+        {
+          text: "Tidak",
+          style: "cancel"
+        },
+        {
+          text: "Ya",
+          onPress: () => handleDeleteCartItem (item.id_keranjang),
+          style: "destructive" // Only for iOS, has no effect on Android
+        }
+      ]
+    );
+  }
+  const handleDeleteCartItem = async (idKeranjang) => {
+    try {
+      const formData = new FormData();
+      // Append the id_keranjang to the form data
+      formData.append('id_keranjang', idKeranjang);
+  
+      // Call the API to delete the cart item using Axios
+      const response = await Axios({
+        method: 'post',
+        url: 'http://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      // const response = await Axios.post('http://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang', formData);
+  
+  
+      if (response.data.status) {
+        Alert.alert("Sukses", "Keranjang berhasil dihapus.");
+        // Update the cart data after the item is deleted
+        setCartData(prevCartData => prevCartData.filter(item => item.id_keranjang !== idKeranjang));
+      } else {
+        Alert.alert("Gagal", "Tidak dapat menghapus keranjang.");
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert("Error", "Terjadi kesalahan saat menghapus keranjang.");
+    }
+  };
 
   return (
     <View style={styles.screenContainer}>
@@ -111,7 +163,10 @@ const CartScreen = ({navigation}) => {
 };
 
 // Styles
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({ 
+  deleteButton: {
+  padding: 10, // Make it easier to press
+},
   screenContainer: {
     flex: 1,
     backgroundColor: '#fff', // or any color that fits your design
@@ -181,7 +236,9 @@ const styles = StyleSheet.create({
   },
   quantityContainer: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   quantityButton: {
     padding: 5,
