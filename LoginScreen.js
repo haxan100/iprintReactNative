@@ -18,8 +18,10 @@ import CustomAlert from './utils/CustomAlert'; // Pastikan path ini sesuai denga
 // import axios from 'axios';
 import Axios from 'axios';
 import FormData from 'form-data';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const LoginScreen = () => {
+
+const LoginScreen = ({navigation}) => {
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [eyeIcon, setEyeIcon] = useState('eye-slash');
 
@@ -47,12 +49,19 @@ const LoginScreen = () => {
     
       console.log(response.data);
       if (response.data.status) {
+        CustomAlert.showAlert('Login Berhasil', `Selamat Datang! 
+        ${response.data.data.nama_user}`);
+
+        await AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
+    
+        // Navigasi ke halaman Home
+        // navigation.navigate('Home');
         // Simpan data ke sesi dan navigasi ke menu utama
       } else {
-        CustomAlert.showAlert('Login Gagal', `Gagal! ${response.data.message}`);
+        CustomAlert.showAlert('Login Gagal', `Gagal!! ${response.data.message}`);
       }
     } catch (error) {
-      CustomAlert.showAlert('Login Gagal', `Gagal! ${error.message}`);
+      CustomAlert.showAlert('Login Gagal', `Gagal ${error.message}`);
     }
   };
   const togglePasswordVisibility = () => {
