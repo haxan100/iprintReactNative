@@ -30,7 +30,13 @@ const ForgotPasswordScreen = ({ navigation }) => {
           console.log(response.data)
           // Jika status respons adalah true
           Alert.alert('Success', 'Silakan cek email Anda untuk kode verifikasi.', [
-            { text: 'OK', onPress: () => navigation.navigate('Verifikasi') },
+            
+            { text: 'OK', onPress: () => {
+              navigation.navigate('Verification', {
+                email: email,
+                reset_pass_key: response.data.reset_pass_key, // Kirim resetPassKey ke halaman verifikasi
+              });
+            } },
           ]);
         } else {
           // Jika status respons adalah false atau terjadi kesalahan
