@@ -12,6 +12,7 @@ import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import LupaPasswordScreen from './ForgotPasswordScreen';
 import VerificationScreen from './VerificationScreen';
+import ResetPasswordScreen from './ResetPasswordScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -66,6 +67,7 @@ function AppNavigator() {
         <Stack.Screen name="Verifikasi" component={VerificationScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeTabs} />
+        <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>

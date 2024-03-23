@@ -32,9 +32,9 @@ const ForgotPasswordScreen = ({ navigation }) => {
           Alert.alert('Success', 'Silakan cek email Anda untuk kode verifikasi.', [
             
             { text: 'OK', onPress: () => {
-              navigation.navigate('Verification', {
+              navigation.navigate('Verifikasi', {
                 email: email,
-                reset_pass_key: response.data.reset_pass_key, // Kirim resetPassKey ke halaman verifikasi
+                reset_pass_key: response.data.data.reset_pass_key, // Kirim resetPassKey ke halaman verifikasi
               });
             } },
           ]);

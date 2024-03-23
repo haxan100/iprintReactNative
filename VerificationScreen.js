@@ -5,6 +5,7 @@ import Axios from 'axios';
 import FormData from 'form-data';
 
 const VerificationScreen = ({ navigation, route }) => {
+  console.log(route.params)
   const [code, setCode] = useState('');
   const [countdown, setCountdown] = useState(30);
   const [email, setEmail] = useState(route.params?.email || '');
@@ -20,22 +21,25 @@ const VerificationScreen = ({ navigation, route }) => {
       Alert.alert('Error', 'Please enter the verification code.');
       return;
     }
-
     try {
       const formData = new FormData();
       formData.append('reset_pass_key', resetPassKey);
-      formData.append('kode_otp', code);
-    
-        // Mengirim permintaan ke endpoint API
+      formData.append('kode_otp', code);    
         const response = await Axios.post(
           'http://heyiamhasan.com/porto/iprintNew/api/check_kode_otp',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
-
-      // Handle the response dari server
+        console.log(response)
       if (response.data.status) {
         console.log(response)
+        Alert.alert('Verifikasi Berhasil', 'Kode verifikasi berhasil diverifikasi.');
+        navigation.navigate('ResetPassword', { 
+          reset_pass_key: response.data.data.reset_pass_key,
+          id_user: response.data.data.id_user,
+
+         });
+
         // Jika verifikasi berhasil
         // ... lakukan tindakan selanjutnya, misal navigasi atau update state
       } else {
@@ -120,6 +124,8 @@ const styles = StyleSheet.create({
   },
   emailText: {
     fontSize: 16,
+    color: '#666',
+
     fontWeight: 'bold',
     marginBottom: 30,
     textAlign: 'center',
