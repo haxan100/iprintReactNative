@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
-const HomeScreen = ({route, notificationCount}) => {
+const HomeScreen = ({navigation,route, notificationCount}) => {
   const [userName, setUserName] = useState('User');
 
   useEffect(() => {
@@ -36,6 +36,9 @@ const HomeScreen = ({route, notificationCount}) => {
     loadUserData();
   }, []);
 
+  const handlePrintOnly = () => {
+    navigation.navigate('PrintOnly');
+  }
   const topSliderItems = [
     {
       imageUrl:
@@ -74,7 +77,8 @@ const HomeScreen = ({route, notificationCount}) => {
       <View style={styles.actionSection}>
       <Text style={styles.promoText}>Buat Kain Favorit-mu Sekarang</Text>
 
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card}
+        onPress={handlePrintOnly}>
           <ImageBackground
             source={require('./assets/images/print.png')}
             style={styles.cardBackground}>

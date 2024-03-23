@@ -13,6 +13,9 @@ import RegisterScreen from './RegisterScreen';
 import LupaPasswordScreen from './ForgotPasswordScreen';
 import VerificationScreen from './VerificationScreen';
 import ResetPasswordScreen from './ResetPasswordScreen';
+import PrintOnlyScreen from './PrintOnlyScreen';
+import PreviewScreen from './PreviewScreen';
+import PrintOnlyLanjutanScreen from './PrintOnlyLanjutanScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,6 +71,9 @@ function AppNavigator() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeTabs} />
         <Stack.Screen name="ResetPassword" component={ResetPasswordScreen} />
+        <Stack.Screen name="PrintOnly" component={PrintOnlyScreen} />
+        <Stack.Screen name="Preview" component={PreviewScreen} />
+        <Stack.Screen name="PrintOnlyLanjutan" component={PrintOnlyLanjutanScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
