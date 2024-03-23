@@ -59,12 +59,14 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
     <ScrollView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Selamat datang, {userName}!</Text>
-        <View style={styles.cartIconContainer}>
-          <Icon name="cart" size={24} color="#5D3FD3" />
-          <View style={styles.notificationBadge}>
-            <Text style={styles.notificationCount}>{notificationCount}</Text>
+        <TouchableOpacity onPress={()=> navigation.navigate('Cart')}>
+          <View style={styles.cartIconContainer}    >
+            <Icon name="cart" size={24} color="#5D3FD3" />
+            <View style={styles.notificationBadge}>
+              <Text style={styles.notificationCount}>{notificationCount}</Text>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <Carousel
         data={topSliderItems}
