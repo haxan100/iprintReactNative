@@ -47,6 +47,9 @@ const LoginScreen = ({navigation}) => {
   const handleRegister = () => {
     navigation.navigate('Register');
   };
+  const handleLupaPassword = () => {
+    navigation.navigate('LupaPassword');
+  };
 
   // Fungsi untuk menangani aksi login
   const handleLogin = async () => {
@@ -121,7 +124,9 @@ const LoginScreen = ({navigation}) => {
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginButtonText}>Log in</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.signUp} onPress={handleLupaPassword}>
         <Text style={styles.forgotPassword}>Lupa password?</Text>
+        </TouchableOpacity>
         <TouchableOpacity style={styles.signUp} onPress={handleRegister}>
           <Text style={styles.signUp}>Belum memiliki akun? Buat Disini</Text>
         </TouchableOpacity>
