@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -8,15 +8,18 @@ import {
   ImageBackground,
   StatusBar,
   Image, // Tambahkan ini
-
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5'; // Untuk FontAwesome
 import Entypo from 'react-native-vector-icons/Entypo'; // Untuk Entypo\
 import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Untuk FontAwesome
 import backgroundImage from './assets/images/bg.png';
+import AlertNotification from 'react-native-alert-notification';
+import CustomAlert from './utils/CustomAlert'; // Pastikan path ini sesuai dengan struktur direktori Anda
+// import axios from 'axios';
+import Axios from 'axios';
+import FormData from 'form-data';
 
 const LoginScreen = () => {
-  
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [eyeIcon, setEyeIcon] = useState('eye-slash');
 
@@ -24,8 +27,33 @@ const LoginScreen = () => {
   const [password, setPassword] = useState('');
 
   // Fungsi untuk menangani aksi login
-  const handleLogin = () => {
-    // Implementasi proses login
+  const handleLogin = async () => {
+    if (!email || !password) {
+      CustomAlert.showAlert('Login Gagal', 'HARUS DI ISI SEMUA');
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+    
+      const response = await Axios({
+        method: 'post',
+        url: 'http://heyiamhasan.com/porto/iprintNew/Api/loginbyEmail',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+    
+      console.log(response.data);
+      if (response.data.status) {
+        // Simpan data ke sesi dan navigasi ke menu utama
+      } else {
+        CustomAlert.showAlert('Login Gagal', `Gagal! ${response.data.message}`);
+      }
+    } catch (error) {
+      CustomAlert.showAlert('Login Gagal', `Gagal! ${error.message}`);
+    }
   };
   const togglePasswordVisibility = () => {
     setPasswordVisibility(!passwordVisibility);
@@ -33,15 +61,16 @@ const LoginScreen = () => {
   };
 
   return (
-    <ImageBackground   source={backgroundImage}
-        style={styles.backgroundImage}>
+    <ImageBackground source={backgroundImage} style={styles.backgroundImage}>
       <StatusBar barStyle="light-content" />
       <View style={styles.container}>
-      <Image 
-          source={{ uri: 'https://www.iprint.id/wp-content/uploads/2023/05/logo-iprint-blue.png' }} 
-          style={styles.logo} 
+        <Image
+          source={{
+            uri: 'https://www.iprint.id/wp-content/uploads/2023/05/logo-iprint-blue.png',
+          }}
+          style={styles.logo}
         />
-      <TextInput
+        <TextInput
           style={styles.input}
           placeholder="Email"
           placeholderTextColor="#BDBDBD"
@@ -110,7 +139,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 3,
     shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
+    shadowOffset: {height: 1, width: 0},
     elevation: 2,
     width: '100%',
   },
@@ -130,7 +159,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2, // Bayangan untuk iOS
     shadowRadius: 3,
     shadowColor: '#000',
-    shadowOffset: { height: 1, width: 0 },
+    shadowOffset: {height: 1, width: 0},
     elevation: 2, // Bayangan untuk Android
     width: '100%',
   },
