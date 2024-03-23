@@ -17,6 +17,7 @@ import PrintOnlyScreen from './PrintOnlyScreen';
 import PreviewScreen from './PreviewScreen';
 import PrintOnlyLanjutanScreen from './PrintOnlyLanjutanScreen';
 import CartScreen from './CartScreen';
+import SettingsScreen from './SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -53,7 +54,7 @@ function HomeTabs() {
       <Tab.Screen name="Beranda" component={HomeScreen} options={{ tabBarLabel: 'Beranda' }} />
       <Tab.Screen name="Riwayat" component={ProfileScreen} options={{ tabBarLabel: 'Riwayat' }} />
       <Tab.Screen name="Notifikasi" component={InfoScreen} options={{ tabBarLabel: 'Notifikasi' }} />
-      <Tab.Screen name="Pengaturan" component={SplashScreen} options={{ tabBarLabel: 'Pengaturan' }} />
+      <Tab.Screen name="Pengaturan" component={SettingsScreen} options={{ tabBarLabel: 'Pengaturan' }} />
     </Tab.Navigator>
   );
 }
@@ -76,6 +77,7 @@ function AppNavigator() {
         <Stack.Screen name="Preview" component={PreviewScreen} />
         <Stack.Screen name="PrintOnlyLanjutan" component={PrintOnlyLanjutanScreen} />
         <Stack.Screen name="Cart" component={CartScreen} />
+        <Stack.Screen name="Setting" component={SettingsScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>

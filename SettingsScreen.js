@@ -1,0 +1,215 @@
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  Image,
+} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import Axios from 'axios';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Add this line for MaterialCommunityIcons
+
+import Icon from 'react-native-vector-icons/Ionicons'; // Replace with the correct icon library if needed
+
+const SettingsScreen = ({ navigation }) => {
+  const [notificationCount, setNotificationCount] = useState(0); // Assume a state that holds the notification count
+
+  const [profile, setProfile] = useState({
+    id_user: '',
+    nama_user: '',
+    email: '',
+    no_phone: '',
+    status: '',
+    foto_user: '',
+  });
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const response = await Axios.get('http://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+        if (response.data && response.data.status) {
+          setProfile(response.data.data);
+        } else {
+          console.log('Failed to fetch profile:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    getProfile();
+  }, []);
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Pengaturan</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
+          <View style={styles.cartIconContainer}>
+            <MaterialCommunityIcons name="cart" size={30} color="#5D3FD3" />
+            {notificationCount > 0 && (
+              <View style={styles.notificationBadge}>
+                <Text style={styles.notificationCount}>{notificationCount}</Text>
+              </View>
+            )}
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.profileSection} onPress={() => {}}>
+         <Image
+          style={styles.profilePic}
+          source={{ uri: profile.foto_user }}
+        />
+        <View style={styles.profileInfo}>
+          <Text style={styles.profileName}>{profile.nama_user}</Text>
+          <Text style={styles.profileEdit}>Edit Profil</Text>
+        </View>
+      </TouchableOpacity>
+
+      <View style={styles.menuSection}>
+        <MenuItem title="Alamat Saya" iconName="location-outline" />
+        <MenuItem title="Ubah Password" iconName="lock-closed-outline" />
+        <MenuItem title="Pengaturan Notifikasi" iconName="notifications-outline" />
+        <MenuItem title="Bahasa / Language" iconName="language-outline" />
+        <MenuItem title="Kebijakan Privasi" iconName="document-text-outline" />
+        <MenuItem title="Tentang" iconName="information-circle-outline" />
+        <MenuItem title="Suka iPrint? Berikan nilai dan ulasan!" iconName="star-outline" />
+        <MenuItem title="Hubungi Kami" iconName="call-outline" />
+      </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>
+        <Text style={styles.logoutButtonText}>Keluar</Text>
+      </TouchableOpacity>
+    </ScrollView>
+  );
+};
+
+const MenuItem = ({ title, iconName }) => (
+  <TouchableOpacity style={styles.menuItem}>
+    <Icon name={iconName} size={24} style={styles.menuIcon} />
+    <Text style={styles.menuText}>{title}</Text>
+    <Icon name="chevron-forward-outline" size={24} style={styles.menuIcon} />
+  </TouchableOpacity>
+);
+
+const styles = StyleSheet.create({
+  notificationBadge: {
+    position: 'absolute',
+    right: -6,
+    top: -3,
+    backgroundColor: 'red',
+    borderRadius: 8,
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cartIconContainer: {
+    position: 'relative',
+  },
+  notificationBadge: {
+    position: 'absolute',
+    right: -6,
+    top: -3,
+    backgroundColor: 'red',
+    borderRadius: 8,
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+  },
+  notificationCount: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 15,
+    paddingTop: 50,
+    backgroundColor: 'white', // or your preferred header background color
+  },
+  container: {
+    flex: 1,
+  },
+  headerTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+    color: '#5D3FD3',
+    flex: 1,
+    textAlign: 'center',
+  },
+  profileSection: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 20,
+  },
+  profilePic: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+    marginRight: 20,
+  },
+  profileInfo: {
+    justifyContent: 'center',
+  },
+  profileName: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  profileEdit: {
+    fontSize: 14,
+    color: '#5D3FD3',
+  },
+  menuSection: {
+    marginTop: 30,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#f0f0f0',
+  },
+  menuIcon: {
+    width: 24,
+    height: 24,
+    marginRight: 20,
+  },
+  menuText: {
+    flex: 1,
+    fontSize: 16,
+  },
+  logoutButton: {
+    backgroundColor: '#5D3FD3',
+    marginHorizontal: 20,
+    padding: 15,
+    borderRadius: 5,
+    marginTop: 30,
+    alignItems: 'center',
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingVertical: 20,
+    backgroundColor: '#fff',
+  },
+  footerIcon: {
+    color: '#5D3FD3',
+  },
+  // ...other styles if necessary
+  });
+  
+  export default SettingsScreen;
