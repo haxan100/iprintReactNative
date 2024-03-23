@@ -3,6 +3,25 @@ import { View, Image, StatusBar, StyleSheet } from 'react-native';
 import { AuthContext } from './AuthContext';
 
 const SplashScreen = ({ navigation }) => {
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      let isLoggedIn;
+      try {
+        // Coba mendapatkan data sesi dari AsyncStorage
+        const userData = await AsyncStorage.getItem('@session_data');
+        isLoggedIn = userData != null; // jika ada data, asumsikan pengguna sudah login
+      } catch (error) {
+        // Proses error jika terjadi kesalahan
+        console.error('Failed to check login status', error);
+        isLoggedIn = false; // jika terjadi error, asumsikan pengguna belum login
+      }
+      // Navigasi berdasarkan status login
+      navigation.navigate(isLoggedIn ? 'Home' : 'Login');
+    };
+
+    checkLoginStatus();
+  }, [navigation]);
+  
   const { isAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {

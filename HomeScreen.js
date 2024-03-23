@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,11 +11,30 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
 const HomeScreen = ({route, notificationCount}) => {
-  const userName = route.params?.userName || 'User';
+  const [userName, setUserName] = useState('User');
+
+  useEffect(() => {
+    const loadUserData = async () => {
+      try {
+        const userDataString = await AsyncStorage.getItem('userData');
+        console.log('Retrieved from AsyncStorage:', userDataString); // Log the raw string
+        const userData = JSON.parse(userDataString);
+        console.log('Parsed UserData:', userData); // Log the parsed object
+        const firstName = userData?.nama_user.split(' ')[0] || 'User';
+        setUserName(firstName);
+
+      } catch (error) {
+        console.error('Failed to load user data', error);
+      }
+    };
+
+    loadUserData();
+  }, []);
 
   const topSliderItems = [
     {

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -22,6 +22,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const LoginScreen = ({navigation}) => {
+  useEffect(() => {
+    // Function to check the user's login status
+    const checkLoginStatus = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('userData');
+        if (userData) {
+          navigation.navigate('Home'); // If user data exists, navigate to Home
+        }
+        // If userData is null, stay on the LoginScreen
+      } catch (error) {
+        console.error('Error checking login status', error);
+      }
+    };
+
+    checkLoginStatus();
+  }, [navigation]);
+
   navigation.navigate('Home');
   
   const [passwordVisibility, setPasswordVisibility] = useState(true);
