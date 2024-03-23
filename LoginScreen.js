@@ -22,6 +22,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const LoginScreen = ({navigation}) => {
+  navigation.navigate('Home');
+  
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [eyeIcon, setEyeIcon] = useState('eye-slash');
 
@@ -55,7 +57,7 @@ const LoginScreen = ({navigation}) => {
         await AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
     
         // Navigasi ke halaman Home
-        // navigation.navigate('Home');
+        navigation.navigate('Home');
         // Simpan data ke sesi dan navigasi ke menu utama
       } else {
         CustomAlert.showAlert('Login Gagal', `Gagal!! ${response.data.message}`);

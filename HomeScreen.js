@@ -1,20 +1,212 @@
 import React from 'react';
-import { View, Text, Button } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  ImageBackground
+} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
 
-function HomeScreen({ navigation }) {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="Go to Profile"
-        onPress={() => navigation.navigate('Profile')}
-      />
-      <Button
-        title="Go to Info"
-        onPress={() => navigation.navigate('Splash')}
-      />
-    </View>
+const {width: viewportWidth} = Dimensions.get('window');
+
+const HomeScreen = ({route, notificationCount}) => {
+  const userName = route.params?.userName || 'User';
+
+  const topSliderItems = [
+    {
+      imageUrl:
+        'https://www.iprint.id/wp-content/uploads/2023/02/tentang-kami-iprint.jpg',
+    },
+    {
+      imageUrl:
+        'https://www.iprint.id/wp-content/uploads/2024/02/cara-mencuci-bed-cover-400x267.webp',
+    },
+    // ... more items
+  ];
+
+  const renderCarouselItem = ({item}) => (
+    <Image source={{uri: item.imageUrl}} style={styles.carouselImage} />
   );
-}
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Selamat datang, {userName}!</Text>
+        <View style={styles.cartIconContainer}>
+          <Icon name="cart" size={24} color="#5D3FD3" />
+          <View style={styles.notificationBadge}>
+            <Text style={styles.notificationCount}>{notificationCount}</Text>
+          </View>
+        </View>
+      </View>
+      <Carousel
+        data={topSliderItems}
+        renderItem={renderCarouselItem}
+        sliderWidth={viewportWidth}
+        itemWidth={viewportWidth}
+        loop
+      />
+
+      <View style={styles.actionSection}>
+      <Text style={styles.promoText}>Buat Kain Favorit-mu Sekarang</Text>
+
+        <TouchableOpacity style={styles.card}>
+          <ImageBackground
+            source={require('./assets/images/print.png')}
+            style={styles.cardBackground}>
+            {/* <Text style={styles.cardText}>Print Only</Text> */}
+            <Icon
+              name="printer"
+              size={24}
+              color="#FFFFFF"
+              style={styles.cardIcon}
+            />
+          </ImageBackground>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.card}>
+          <ImageBackground
+          source={require('./assets/images/kainprint.png')}
+            style={styles.cardBackground}>
+            {/* <Text style={styles.cardText}>Cut n Print</Text> */}
+            <Icon
+              name="scissors-cutting"
+              size={24}
+              color="#FFFFFF"
+              style={styles.cardIcon}
+            />
+          </ImageBackground>
+        </TouchableOpacity>
+      </View>
+      {/* Define your bottom tab navigation here */}
+    </ScrollView>
+  );
+};
+
+const styles = StyleSheet.create({
+  promoText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color:'#331864',
+    // Positioning the text above the ImageBackground
+    // position: 'absolute',
+    zIndex: 1, // Make sure text is above the background image
+    alignSelf: 'center', // Center the text within the promo container
+    marginTop: 10, // Adjust the distance from the top
+    marginBottom: 10, // Adjust the distance from the top
+    // backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
+    padding: 10, // Padding inside the background
+    borderRadius: 20, // Rounded corners
+  },
+  actionSection: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+  },
+  card: {
+    elevation: 3, // for shadow on Android
+    shadowOpacity: 0.1, // for shadow on iOS
+    shadowRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: { height: 2, width: 0 },
+    borderRadius: 10,
+    overflow: 'hidden', // This keeps the child image within the border radius
+    marginBottom: 10, // Space between cards
+  },
+  cardBackground: {
+    width: 300, // Your custom width
+    height: 150, // Your custom height
+    justifyContent: 'flex-end', // Align text to the bottom
+    alignItems: 'center', // Align text to the center
+    padding: 10, // Padding for text inside the card
+  },
+  cardText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  cardIcon: {
+    // Positioning the icon if necessary
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  headerIcon: {
+    color: '#3A0CA3',
+  },
+
+  container: {
+    flex: 1,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 20,
+    paddingHorizontal: 20,
+  },
+  headerTitle: {
+    marginTop: 20,
+    marginBottom: 25,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+    textAlign: 'center',
+  },
+  container: {
+    flex: 1,
+  },
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginTop: 20,
+    marginLeft: 20,
+  },
+  carouselImage: {
+    width: viewportWidth, // Width of the viewport
+    height: 200,
+    borderRadius: 8,
+  },
+  optionContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
+  },
+  optionButton: {
+    backgroundColor: '#fff', // A background color
+    elevation: 2, // Shadow for Android
+    padding: 15,
+    borderRadius: 8,
+  },
+  carouselContainer: {
+    marginVertical: 20,
+  },
+  cartIconContainer: {
+    position: 'relative',
+  },
+  notificationBadge: {
+    position: 'absolute',
+    right: -6,
+    top: -3,
+    backgroundColor: 'red',
+    borderRadius: 8,
+    width: 16,
+    height: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  notificationCount: {
+    color: 'white',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+  // Add additional styles for bottom tab navigation as needed
+});
 
 export default HomeScreen;
