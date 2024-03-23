@@ -38,14 +38,15 @@ const LoginScreen = ({navigation}) => {
 
     checkLoginStatus();
   }, [navigation]);
-
-  navigation.navigate('Home');
   
   const [passwordVisibility, setPasswordVisibility] = useState(true);
   const [eyeIcon, setEyeIcon] = useState('eye-slash');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const handleRegister = () => {
+    navigation.navigate('Register');
+  };
 
   // Fungsi untuk menangani aksi login
   const handleLogin = async () => {
@@ -121,7 +122,9 @@ const LoginScreen = ({navigation}) => {
           <Text style={styles.loginButtonText}>Log in</Text>
         </TouchableOpacity>
         <Text style={styles.forgotPassword}>Lupa password?</Text>
-        <Text style={styles.signUp}>Belum memiliki akun? Buat Disini</Text>
+        <TouchableOpacity style={styles.signUp} onPress={handleRegister}>
+          <Text style={styles.signUp}>Belum memiliki akun? Buat Disini</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );

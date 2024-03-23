@@ -9,6 +9,7 @@ import ProfileScreen from './ProfileScreen';
 import InfoScreen from './InfoScreen';
 import SplashScreen from './SplashScreen';
 import LoginScreen from './LoginScreen';
+import RegisterScreen from './RegisterScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -58,6 +59,7 @@ function AppNavigator() {
           screenOptions={{ headerShown: false }}
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
+        <Stack.Screen name="Register" component={RegisterScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Home" component={HomeTabs} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}

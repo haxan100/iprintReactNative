@@ -13,6 +13,10 @@ function ProfileScreen({ navigation }) {
         title="Go to Info"
         onPress={() => navigation.navigate('Info')}
       />
+      <Button
+        title="Register"
+        onPress={() => navigation.navigate('Register')}
+      />
     </View>
   );
 }
