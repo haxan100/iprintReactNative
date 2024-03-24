@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Axios from 'axios'; // Make sure Axios is installed and imported
 import ImagePicker from 'react-native-image-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
+import FormData from 'form-data';
 
 const EditProfileScreen = ({ navigation }) => {
   const [profile, setProfile] = useState({
@@ -55,49 +57,74 @@ const EditProfileScreen = ({ navigation }) => {
         }
       });
     };
-  const handleProfileUpdate = async () => {
-    try {
-      const formData = new FormData();
-      formData.append('nama_user', profile.nama_user);
-      formData.append('email', profile.email);
-      formData.append('no_phone', profile.no_phone);
-      
-      // Update the profile information
-      const response = await Axios.post('http://heyiamhasan.com/porto/iprintNew/Api/updateProfile', formData);
-      if (response.data.status) {
-        Alert.alert('Success', 'Profile updated successfully');
-      } else {
-        Alert.alert('Error', 'Failed to update profile');
+    const handleProfileUpdate = async () => {
+      try {
+        const formData = new FormData();
+        formData.append('nama_user', profile.nama_user);
+        formData.append('email', profile.email);
+        formData.append('no_phone', profile.no_phone);
+    
+        console.log('FormData:', formData);
+    
+        const response = await Axios.post('http://heyiamhasan.com/porto/iprintNew/Api/updateProfile', formData, {
+          headers: {
+            // Add any headers required by your API
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+    
+        console.log('Response:', response);
+    
+        if (response.data.status) {
+          Alert.alert('Success', 'Profile updated successfully');
+        } else {
+          Alert.alert('Error', 'Failed to update profile');
+        }
+      } catch (error) {
+        console.error('Error:', error);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const handleProfilePicUpdate = async (imageUri) => {
-    console.log(imageUri)
-    console.log("????????????")
-    try {
-      const formData = new FormData();
-      formData.append('foto_user', {
-        uri: imageUri,
-        type: 'image/jpeg', // or the correct type of the image
-        name: 'profile-pic.jpg',
-      });
-      
-      // Update the profile picture
-      const response = await Axios.post('http://heyiamhasan.com/porto/iprintNew/Api/updateFotoProfile', formData);
-      console.log("=========")
-      console.log(response.data)
-      console.log("=========")
-      if (response.data.status) {
-        Alert.alert('Success', 'Profile picture updated successfully');
-      } else {
-        Alert.alert('Error', 'Failed to update profile picture');
+    };
+    
+    const handleProfilePicUpdate = async (imageUri) => {
+      console.log("Image URI: ", imageUri);
+      try {
+          const formData = new FormData();
+          formData.append('foto_user', {
+              uri: imageUri,
+              type: 'image/jpeg',
+              name: 'profile-pic.jpg',
+          });
+  
+          console.log("FormData prepared for upload: ", formData);
+  
+          const response = await Axios.post(
+              'https://heyiamhasan.com/porto/iprintNew/Api/updateFotoProfile',
+              formData,
+              { headers: { 'Content-Type': 'multipart/form-data' } } // This line is often unnecessary, but included here just in case your server needs it.
+          );
+  
+          console.log("Server Response: ", response.data);
+  
+          if (response.data.status) {
+              Alert.alert('Success', 'Profile picture updated successfully');
+          } else {
+              Alert.alert('Error', 'Failed to update profile picture');
+          }
+      } catch (error) {
+          console.error("Error during profile picture update: ", error);
+          if (error.response) {
+              // The server responded with a status code outside the range of 2xx
+              console.log("Server Response Error: ", error.response.data);
+          } else if (error.request) {
+              // The request was made but no response was received
+              console.log("No response received: ", error.request);
+          } else {
+              // Something happened in setting up the request that triggered an error
+              console.log("Error setting up the request: ", error.message);
+          }
       }
-    } catch (error) {
-      console.error(error);
-    }
   };
+  
 
   const fetchProfileData = async () => {
     try {
@@ -132,8 +159,10 @@ const EditProfileScreen = ({ navigation }) => {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Icon name="chevron-back" size={30} onPress={() => navigation.goBack()} />
+       <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Icon name="chevron-back" color="#000" size={30} />
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>Edit Profil</Text>
       </View>
       
@@ -148,12 +177,14 @@ const EditProfileScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.form}>
+        <Text style={styles.textEmail}>Nama Lengkap</Text>
         <TextInput
           style={styles.input}
           value={profile.nama_user}
           onChangeText={handleNameChange} // Use the new handler here
           placeholder="Nama Lengkap"
         />
+        <Text style={styles.textEmail}>Nomor Handphone</Text>
         <TextInput
           style={styles.input}
           value={profile.no_phone}
@@ -161,6 +192,7 @@ const EditProfileScreen = ({ navigation }) => {
           placeholder="Nomor Handphone"
           keyboardType="phone-pad"
         />
+        <Text style={styles.textEmail}>Email</Text>
         <TextInput
           style={styles.input}
           value={profile.email}
@@ -185,17 +217,33 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 10,
+    justifyContent: 'center', // Center items horizontally in the container
+    paddingTop: 50,
+    paddingBottom: 10,
+    
+    // If you have a navigation bar or status bar, you might need to add some padding here
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    marginLeft: 10,
+    position: 'absolute', // Positioning the title absolutely to center it in the header
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    color: '#000',
+
+  },
+  backButton: {
+    color: '#000',
+
+    padding: 10, // Optional: if you want to make the back button area larger
+    position: 'absolute', // Position the back button absolutely to place it on the left
+    left: 10, // Space from the left side
   },
   profileContainer: {
     alignItems: 'center',
     marginVertical: 20,
+    
   },
   profilePic: {
     width: 100,
@@ -204,6 +252,8 @@ const styles = StyleSheet.create({
   },
   form: {
     marginHorizontal: 20,
+    color: '#000',
+
   },
   input: {
     borderWidth: 1,
@@ -212,6 +262,14 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     fontSize: 16,
+    color: '#000',
+
+  },
+  textEmail: {
+    fontSize: 20,
+    color: '#000',
+    fontStyle: 'normal',
+
   },
   saveButton: {
     backgroundColor: '#6200EE',
@@ -219,7 +277,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     padding: 15,
     alignItems: 'center',
-    marginTop: 20,
+    marginTop: 180,
   },
   saveButtonText: {
     color: 'white',
