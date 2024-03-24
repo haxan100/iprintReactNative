@@ -21,6 +21,7 @@ import SettingsScreen from './SettingsScreen';
 import EditProfileScreen from './EditProfileScreen';
 import PrivacyPolicyScreen from './PrivacyPolicyScreen';
 import TentangScreen from './TentangScreen';
+import HistoryScreen from './HistoryScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -34,7 +35,7 @@ function HomeTabs() {
           let iconName;
           if (route.name === 'Beranda') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Riwayat') {
+          } else if (route.name === 'HistoryScreen') {
             iconName = 'history';
           } else if (route.name === 'Notifikasi') {
             iconName = focused ? 'bell' : 'bell-outline';
@@ -55,7 +56,7 @@ function HomeTabs() {
       })}
     >
       <Tab.Screen name="Beranda" component={HomeScreen} options={{ tabBarLabel: 'Beranda' }} />
-      <Tab.Screen name="Riwayat" component={ProfileScreen} options={{ tabBarLabel: 'Riwayat' }} />
+      <Tab.Screen name="HistoryScreen" component={HistoryScreen} options={{ tabBarLabel: 'HistoryScreen' }} />
       <Tab.Screen name="Notifikasi" component={InfoScreen} options={{ tabBarLabel: 'Notifikasi' }} />
       <Tab.Screen name="Pengaturan" component={SettingsScreen} options={{ tabBarLabel: 'Pengaturan' }} />
     </Tab.Navigator>
@@ -84,6 +85,7 @@ function AppNavigator() {
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
         <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="Tentang" component={TentangScreen} />
+        <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
