@@ -43,7 +43,7 @@ const PrivacyPolicyScreen = ({ onBackPress,navigation  }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={30} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Kebijakan Privasi</Text>
+        <Text style={styles.headerTitle}>Tentang</Text>
       </View>
       {isLoading ? (
         <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
