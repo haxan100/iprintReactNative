@@ -1,29 +1,18 @@
-import React, {useState, useEffect} from 'react';
-import {
-  ScrollView,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  useWindowDimensions,
-  SafeAreaView,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { ScrollView, Text, ActivityIndicator, StyleSheet, View,TouchableOpacity,useWindowDimensions,SafeAreaView   } from 'react-native';
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons'; // Ensure you have this package installed
 import RenderHtml from 'react-native-render-html';
 
-const PrivacyPolicyScreen = ({onBackPress, navigation}) => {
+const PrivacyPolicyScreen = ({ onBackPress,navigation  }) => {
   const [privacyPolicy, setPrivacyPolicy] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPrivacyPolicy = async () => {
       try {
-        const response = await Axios.get(
-          'https://heyiamhasan.com/porto/iprintNew/Api/kebijakan',
-        );
-        console.log(response.data.data.isi);
+        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/tentang');
+        console.log(response.data.data.isi)
         if (response.data.status) {
           setPrivacyPolicy(response.data.data.isi); // Assume the policy text is in response.data.data
         } else {
@@ -32,9 +21,7 @@ const PrivacyPolicyScreen = ({onBackPress, navigation}) => {
         }
       } catch (error) {
         // Handle the error case
-        setPrivacyPolicy(
-          'An error occurred while fetching the privacy policy.',
-        );
+        setPrivacyPolicy('An error occurred while fetching the privacy policy.');
         console.error(error);
       } finally {
         setIsLoading(false);
@@ -44,14 +31,14 @@ const PrivacyPolicyScreen = ({onBackPress, navigation}) => {
     fetchPrivacyPolicy();
   }, []);
   const source = {
-    html: privacyPolicy,
+    html: privacyPolicy
   };
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const tagsStyles = {
-    body: {color: 'black'}, // Ubah warna teks menjadi hitam atau warna yang diinginkan
+    body: { color: 'black' }, // Ubah warna teks menjadi hitam atau warna yang diinginkan
   };
   return (
-    <SafeAreaView style={{flex: 1}}>
+    <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.headerContainer}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="chevron-back" size={30} color="#000" />
@@ -59,7 +46,7 @@ const PrivacyPolicyScreen = ({onBackPress, navigation}) => {
         <Text style={styles.headerTitle}>Kebijakan Privasi</Text>
       </View>
       {isLoading ? (
-        <ActivityIndicator size="large" color="#0000ff" style={{flex: 1}} />
+        <ActivityIndicator size="large" color="#0000ff" style={{ flex: 1 }} />
       ) : (
         <ScrollView style={styles.contentContainer}>
           <RenderHtml
@@ -93,7 +80,7 @@ const styles = StyleSheet.create({
     // Remove flex and alignContent from here
     padding: 16,
     justifyContent: 'center', // This will have no effect on a non-flex container
-
+    
     alignItems: 'center', // Centers items horizontally in the container
   },
   text: {
@@ -105,7 +92,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    color: '#000',
+    color: "#000",
     fontWeight: 'bold',
     flex: 1, // This will ensure the title is centered by pushing the back icon to the left
     textAlign: 'center', // This will center the title text if there's no icon on the right

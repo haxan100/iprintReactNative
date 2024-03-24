@@ -115,7 +115,10 @@ const SettingsScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('PrivacyPolicy')} // Make sure the route name matches
         />
 
-        <MenuItem title="Tentang" iconName="information-circle-outline" />
+        <MenuItem title="Tentang" iconName="information-circle-outline"
+          onPress={() => navigation.navigate('Tentang')} // Make sure the route name matches
+        />
+
         <MenuItem title="Suka iPrint? Berikan nilai dan ulasan!" iconName="star-outline" />
         <MenuItem title="Hubungi Kami" iconName="call-outline" />
       </View>
