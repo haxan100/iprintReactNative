@@ -108,7 +108,13 @@ const SettingsScreen = ({ navigation }) => {
         <MenuItem title="Ubah Password" iconName="lock-closed-outline" />
         <MenuItem title="Pengaturan Notifikasi" iconName="notifications-outline" />
         <MenuItem title="Bahasa / Language" iconName="language-outline" />
-        <MenuItem title="Kebijakan Privasi" iconName="document-text-outline" />
+
+        <MenuItem 
+          title="Kebijakan Privasi" 
+          iconName="document-text-outline" 
+          onPress={() => navigation.navigate('PrivacyPolicy')} // Make sure the route name matches
+        />
+
         <MenuItem title="Tentang" iconName="information-circle-outline" />
         <MenuItem title="Suka iPrint? Berikan nilai dan ulasan!" iconName="star-outline" />
         <MenuItem title="Hubungi Kami" iconName="call-outline" />
@@ -121,8 +127,8 @@ const SettingsScreen = ({ navigation }) => {
   );
 };
 
-const MenuItem = ({ title, iconName }) => (
-  <TouchableOpacity style={styles.menuItem}>
+const MenuItem = ({ title, iconName, onPress }) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
     <Icon name={iconName} size={24} style={styles.menuIcon} />
     <Text style={styles.menuText}>{title}</Text>
     <Icon name="chevron-forward-outline" size={24} style={styles.menuIcon} />

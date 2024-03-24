@@ -19,6 +19,7 @@ import PrintOnlyLanjutanScreen from './PrintOnlyLanjutanScreen';
 import CartScreen from './CartScreen';
 import SettingsScreen from './SettingsScreen';
 import EditProfileScreen from './EditProfileScreen';
+import PrivacyPolicyScreen from './PrivacyPolicyScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,6 +81,7 @@ function AppNavigator() {
         <Stack.Screen name="Cart" component={CartScreen} />
         <Stack.Screen name="Setting" component={SettingsScreen} />
         <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+        <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
