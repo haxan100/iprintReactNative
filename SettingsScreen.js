@@ -5,7 +5,8 @@ import {
   StyleSheet,
   ScrollView,
   Image,
-  Alert
+  Alert,
+  Linking 
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
@@ -75,7 +76,22 @@ const SettingsScreen = ({ navigation }) => {
       }
     ]);
   };
+  const openWhatsApp = (number) => {
+    let message = 'Halo, saya ingin bertanya mengenai iPrint.';
+    let whatsappLink = `whatsapp://send?text=${encodeURIComponent(message)}&phone=${number}`;
+    let whatsappBrowserLink = `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 
+    Linking.canOpenURL(whatsappLink)
+      .then((supported) => {
+        if (!supported) {
+          Linking.openURL(whatsappBrowserLink); // Buka di browser jika WhatsApp tidak tersedia
+
+        } else {
+          return Linking.openURL(whatsappLink);
+        }
+      })
+      .catch((err) => console.error('An error occurred', err));
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -120,7 +136,9 @@ const SettingsScreen = ({ navigation }) => {
         />
 
         <MenuItem title="Suka iPrint? Berikan nilai dan ulasan!" iconName="star-outline" />
-        <MenuItem title="Hubungi Kami" iconName="call-outline" />
+        <MenuItem title="Hubungi Kami" 
+         onPress={() => openWhatsApp('6289602350857')}
+         iconName="call-outline" />
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
