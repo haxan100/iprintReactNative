@@ -22,6 +22,7 @@ import EditProfileScreen from './EditProfileScreen';
 import PrivacyPolicyScreen from './PrivacyPolicyScreen';
 import TentangScreen from './TentangScreen';
 import HistoryScreen from './HistoryScreen';
+import NotificationScreen from './NotificationScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -37,7 +38,7 @@ function HomeTabs() {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === 'HistoryScreen') {
             iconName = 'history';
-          } else if (route.name === 'Notifikasi') {
+          } else if (route.name === 'Notification') {
             iconName = focused ? 'bell' : 'bell-outline';
           } else if (route.name === 'Pengaturan') {
             iconName = focused ? 'cog' : 'cog-outline'; // Menggunakan 'cog' sebagai alternatif untuk settings
@@ -57,7 +58,7 @@ function HomeTabs() {
     >
       <Tab.Screen name="Beranda" component={HomeScreen} options={{ tabBarLabel: 'Beranda' }} />
       <Tab.Screen name="HistoryScreen" component={HistoryScreen} options={{ tabBarLabel: 'HistoryScreen' }} />
-      <Tab.Screen name="Notifikasi" component={InfoScreen} options={{ tabBarLabel: 'Notifikasi' }} />
+      <Tab.Screen name="Notification" component={NotificationScreen} options={{ tabBarLabel: 'Notifikasi' }} />
       <Tab.Screen name="Pengaturan" component={SettingsScreen} options={{ tabBarLabel: 'Pengaturan' }} />
     </Tab.Navigator>
   );
@@ -86,6 +87,7 @@ function AppNavigator() {
         <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
         <Stack.Screen name="Tentang" component={TentangScreen} />
         <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
+        <Stack.Screen name="Notification" component={NotificationScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>

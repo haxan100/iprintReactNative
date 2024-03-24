@@ -28,6 +28,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
         // Mengecek respons dari server
         if (response.data.status) {
           console.log(response.data)
+          console.log(response.data.data)
           // Jika status respons adalah true
           Alert.alert('Success', 'Silakan cek email Anda untuk kode verifikasi.', [
             
