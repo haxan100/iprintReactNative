@@ -5,10 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Alert
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Add this line for MaterialCommunityIcons
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons'; // Replace with the correct icon library if needed
 
@@ -39,6 +41,40 @@ const SettingsScreen = ({ navigation }) => {
 
     getProfile();
   }, []);
+  const handleLogout = () => {
+    // Show confirmation dialog
+    Alert.alert(
+      "Konfirmasi Keluar",
+      "Apakah kamu ingin keluar?",
+      [
+        {
+          text: "Tidak",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        { text: "Ya", onPress: () => performLogout() }
+      ],
+      { cancelable: false }
+    );
+  };
+  const performLogout = () => {
+    // Clear the session data
+    // This will depend on how you are managing the session.
+    // For example, if using AsyncStorage then you'd do something like:
+    AsyncStorage.clear(); // this will clear all AsyncStorage data
+  
+    // Show a message that logout is successful and then redirect after 2 seconds
+    Alert.alert("Berhasil", "Kamu telah keluar.", [
+      {
+        text: "OK",
+        onPress: () => {
+          setTimeout(() => {
+            navigation.navigate('Login'); // replace 'Login' with the name of your login screen
+          }, 1500);
+        }
+      }
+    ]);
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -56,7 +92,7 @@ const SettingsScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity style={styles.profileSection} onPress={() => {}}>
+      <TouchableOpacity style={styles.profileSection} onPress={() => {navigation.navigate('EditProfile');}}>
          <Image
           style={styles.profilePic}
           source={{ uri: profile.foto_user }}
@@ -78,7 +114,7 @@ const SettingsScreen = ({ navigation }) => {
         <MenuItem title="Hubungi Kami" iconName="call-outline" />
       </View>
 
-      <TouchableOpacity style={styles.logoutButton} onPress={() => {}}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutButtonText}>Keluar</Text>
       </TouchableOpacity>
     </ScrollView>
@@ -188,15 +224,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   logoutButton: {
-    backgroundColor: '#5D3FD3',
-    marginHorizontal: 20,
+    backgroundColor: '#D11A2A', // or any color that fits your design
     padding: 15,
     borderRadius: 5,
-    marginTop: 30,
     alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20, // Adjust as needed
   },
   logoutButtonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
