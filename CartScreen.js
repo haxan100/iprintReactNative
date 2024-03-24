@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sur
 import { formatRupiah } from './utils/currencyUtils';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
 import FormData from 'form-data';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Api from './utils/Api'; // Pastikan path ini sesuai dengan struktur direktori Anda
 
 // Data dummy, gantikan dengan state yang menyimpan data keranjang belanja Anda
 const cartItems = [
@@ -23,6 +25,7 @@ const cartItems = [
 
 const CartScreen = ({navigation,onDelete }) => {
   const [cartData, setCartData] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [cart, setCart] = useState(cartItems);
 
@@ -30,7 +33,9 @@ const CartScreen = ({navigation,onDelete }) => {
     const getCartData = async () => {
       try {
         // Panggil API untuk mendapatkan data keranjang
-        const response = await Axios.get('http://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
+        // const response = await Axios.get('http://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
+        const response = await Api.get('http://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
+
         if (response.data && response.data.status) {
           // Jika ada data dan status true, set data ke state
           setCartData(response.data.data);
@@ -45,7 +50,28 @@ const CartScreen = ({navigation,onDelete }) => {
     };
 
     getCartData();
+    
+    checkLoginStatus();
   }, []);
+
+  const checkLoginStatus = async () => {
+    try {
+      const userData = await AsyncStorage.getItem('userData');
+      console.log("=============")
+      console.log(userData)
+      console.log("-----------")
+      if (userData !== null) {
+        // Jika ada data user di AsyncStorage, pengguna sudah login
+        setIsLoggedIn(true);
+      } else {
+        // Jika tidak ada data user, pengguna belum login
+        setIsLoggedIn(false);
+      }
+    } catch (error) {
+      console.error('Error fetching login status', error);
+    }
+  };
+
 
   const handleQuantityChange = (id, diff) => {
     // Fungsi untuk menangani perubahan kuantitas produk
@@ -59,6 +85,13 @@ const CartScreen = ({navigation,onDelete }) => {
     console.log("Pesan Sekarang pressed for item: ", item);
     // Implement your action here, such as navigating to a confirmation screen
     // or directly handling the order logic
+  };
+  const renderEmptyCart = () => {
+    return (
+      <View style={styles.emptyCartContainer}>
+        <Text style={styles.emptyCartText}>Keranjang kosong</Text>
+      </View>
+    );
   };
   const renderItem = ({ item  }) => (
     <View style={styles.itemContainer}>
@@ -133,37 +166,45 @@ const CartScreen = ({navigation,onDelete }) => {
 
   return (
     <View style={styles.screenContainer}>
-
-      {/* Custom header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Icon name="chevron-left" size={30} color="#5D3FD3" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Keranjang</Text>
-        {/* This is just a placeholder to balance the header */}
-        <Icon name="chevron-left" size={30} color="transparent" /> 
+        <Icon name="chevron-left" size={30} color="transparent" />
       </View>
 
-      {/* List of cart items */}
-      <FlatList
-        data={cartData}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id_keranjang.toString()}
-      />
+      {cartData.length > 0 ? (
+        <FlatList
+          data={cartData}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id_keranjang.toString()}
+        />
+      ) : (
+        renderEmptyCart()
+      )}
 
-      {/* Checkout button */}
       <View style={styles.checkoutContainer}>
-        <TouchableOpacity style={styles.checkoutButton} onPress={() => {/* Handle checkout */}}>
+        <TouchableOpacity style={styles.checkoutButton}>
           <Text style={styles.checkoutButtonText}>Checkout (0)</Text>
         </TouchableOpacity>
       </View>
-
     </View>
   );
 };
 
 // Styles
 const styles = StyleSheet.create({ 
+  emptyCartContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  emptyCartText: {
+    fontSize: 18,
+    color: '#555',
+  },
   deleteButton: {
   padding: 10, // Make it easier to press
 },
