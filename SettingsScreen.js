@@ -193,14 +193,16 @@ const styles = StyleSheet.create({
   },
   profileInfo: {
     justifyContent: 'center',
+    color: '#000',
   },
   profileName: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#000',
   },
   profileEdit: {
     fontSize: 14,
-    color: '#5D3FD3',
+    color: '#FF612E',
   },
   menuSection: {
     marginTop: 30,
@@ -217,11 +219,14 @@ const styles = StyleSheet.create({
   menuIcon: {
     width: 24,
     height: 24,
+    color: '#100821',
     marginRight: 20,
+
   },
   menuText: {
     flex: 1,
     fontSize: 16,
+    color: '#100821',
   },
   logoutButton: {
     backgroundColor: '#D11A2A', // or any color that fits your design
