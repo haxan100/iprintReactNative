@@ -26,6 +26,35 @@ const SettingsScreen = ({ navigation }) => {
     status: '',
     foto_user: '',
   });
+  const checkLoginAndFetchProfile = async () => {
+    const userDataString = await AsyncStorage.getItem('userData');
+    if (userDataString) {
+      const userData = JSON.parse(userDataString);
+      fetchProfile(userData.id);
+    } else {
+      // Not logged in
+      navigation.navigate('Login');
+    }
+  };
+  const fetchProfile = async (userId) => {
+    try {
+      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+      if (response.data && response.data.status) {
+        setProfile(response.data.data);
+      } else {
+        console.log('Failed to fetch profile:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      checkLoginAndFetchProfile();
+    });
+
+    return unsubscribe;
+  }, [navigation]);
   useEffect(() => {
     const getProfile = async () => {
       try {
