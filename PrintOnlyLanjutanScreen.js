@@ -42,7 +42,7 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
     try {
       const response = await Axios({
         method: 'post',
-        url: 'http://heyiamhasan.com/porto/iprintNew/Api/addKeranjang', // Ganti dengan URL yang sesuai
+        url: 'https://heyiamhasan.com/porto/iprintNew/Api/addKeranjang', // Ganti dengan URL yang sesuai
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

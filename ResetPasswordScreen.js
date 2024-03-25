@@ -43,7 +43,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
   
     try {
       const response = await Axios.post(
-        'http://heyiamhasan.com/porto/iprintNew/api/ganti_password',
+        'https://heyiamhasan.com/porto/iprintNew/api/ganti_password',
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

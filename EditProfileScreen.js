@@ -66,7 +66,7 @@ const EditProfileScreen = ({ navigation }) => {
     
         console.log('FormData:', formData);
     
-        const response = await Axios.post('http://heyiamhasan.com/porto/iprintNew/Api/updateProfile', formData, {
+        const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/updateProfile', formData, {
           headers: {
             // Add any headers required by your API
             'Content-Type': 'multipart/form-data',
@@ -128,7 +128,7 @@ const EditProfileScreen = ({ navigation }) => {
 
   const fetchProfileData = async () => {
     try {
-      const response = await Axios.get('http://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
       if (response.data.status) {
         console.log(response.data.data)
         setProfile(response.data.data);

@@ -65,7 +65,7 @@ const LoginScreen = ({navigation}) => {
     
       const response = await Axios({
         method: 'post',
-        url: 'http://heyiamhasan.com/porto/iprintNew/Api/loginbyEmail',
+        url: 'https://heyiamhasan.com/porto/iprintNew/Api/loginbyEmail',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

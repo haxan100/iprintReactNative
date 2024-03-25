@@ -35,7 +35,7 @@ const RegisterScreen = ({ navigation }) => {
     // Make the API call
     try {
       const response = await Axios.post(
-        'http://heyiamhasan.com/porto/iprintNew/Api/registerBiasa',
+        'https://heyiamhasan.com/porto/iprintNew/Api/registerBiasa',
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

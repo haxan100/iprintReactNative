@@ -29,7 +29,7 @@ const SettingsScreen = ({ navigation }) => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await Axios.get('http://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
         if (response.data && response.data.status) {
           setProfile(response.data.data);
         } else {

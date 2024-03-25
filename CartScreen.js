@@ -33,8 +33,8 @@ const CartScreen = ({navigation,onDelete }) => {
     const getCartData = async () => {
       try {
         // Panggil API untuk mendapatkan data keranjang
-        // const response = await Axios.get('http://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
-        const response = await Api.get('http://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
+        // const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
+        const response = await Api.get('https://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
 
         if (response.data && response.data.status) {
           // Jika ada data dan status true, set data ke state
@@ -143,12 +143,12 @@ const CartScreen = ({navigation,onDelete }) => {
       // Call the API to delete the cart item using Axios
       const response = await Axios({
         method: 'post',
-        url: 'http://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang',
+        url: 'https://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
-      // const response = await Axios.post('http://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang', formData);
+      // const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang', formData);
   
   
       if (response.data.status) {
