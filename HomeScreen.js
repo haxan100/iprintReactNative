@@ -39,6 +39,9 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   const handlePrintOnly = () => {
     navigation.navigate('PrintOnly');
   }
+  const handlePrintCut = () => {
+    navigation.navigate('PrintCut');
+  }
   const topSliderItems = [
     {
       imageUrl:
@@ -94,7 +97,7 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
           </ImageBackground>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.card}>
+        <TouchableOpacity style={styles.card} onPress={handlePrintCut}>
           <ImageBackground
           source={require('./assets/images/kainprint.png')}
             style={styles.cardBackground}>

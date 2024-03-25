@@ -24,6 +24,9 @@ import TentangScreen from './TentangScreen';
 import HistoryScreen from './HistoryScreen';
 import NotificationScreen from './NotificationScreen';
 import ChangePasswordScreen from './ChangePasswordScreen';
+import PrintCutScreen from './PrintCutScreen';
+import PreviewCutScreen from './PreviewCutScreen';
+import PrintCutLanjutanScreen from './PrintCutLanjutanScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -90,6 +93,9 @@ function AppNavigator() {
         <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
         <Stack.Screen name="Notification" component={NotificationScreen} />
         <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
+        <Stack.Screen name="PrintCut" component={PrintCutScreen} />
+        <Stack.Screen name="PreviewCut" component={PreviewCutScreen} />
+        <Stack.Screen name="PrintCutLanjutan" component={PrintCutLanjutanScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
