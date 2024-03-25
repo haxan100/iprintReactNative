@@ -30,6 +30,7 @@ const SettingsScreen = ({ navigation }) => {
     const getProfile = async () => {
       try {
         const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+        console.log(response)
         if (response.data && response.data.status) {
           setProfile(response.data.data);
         } else {
@@ -121,7 +122,12 @@ const SettingsScreen = ({ navigation }) => {
 
       <View style={styles.menuSection}>
         <MenuItem title="Alamat Saya" iconName="location-outline" />
-        <MenuItem title="Ubah Password" iconName="lock-closed-outline" />
+        <MenuItem 
+        title="Ubah Password" 
+        iconName="lock-closed-outline" 
+        onPress={() => navigation.navigate('ChangePassword')} // Make sure the route name matches
+        
+         />
         <MenuItem title="Pengaturan Notifikasi" iconName="notifications-outline" />
         <MenuItem title="Bahasa / Language" iconName="language-outline" />
 

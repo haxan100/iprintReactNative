@@ -23,6 +23,7 @@ import PrivacyPolicyScreen from './PrivacyPolicyScreen';
 import TentangScreen from './TentangScreen';
 import HistoryScreen from './HistoryScreen';
 import NotificationScreen from './NotificationScreen';
+import ChangePasswordScreen from './ChangePasswordScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -88,6 +89,7 @@ function AppNavigator() {
         <Stack.Screen name="Tentang" component={TentangScreen} />
         <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
         <Stack.Screen name="Notification" component={NotificationScreen} />
+        <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
