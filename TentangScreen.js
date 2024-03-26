@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     backgroundColor: 'white',
+    padding:20
   },
   container: {
     flex: 1,
