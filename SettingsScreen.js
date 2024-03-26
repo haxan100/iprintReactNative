@@ -157,7 +157,12 @@ const SettingsScreen = ({ navigation }) => {
         onPress={() => navigation.navigate('ChangePassword')} // Make sure the route name matches
         
          />
-        <MenuItem title="Pengaturan Notifikasi" iconName="notifications-outline" />
+        <MenuItem 
+          title="Pengaturan Notifikasi"
+          iconName="notifications-outline"           
+          onPress={() => navigation.navigate('NotificationSettings')} // Make sure the route name matches
+
+          />
         <MenuItem title="Bahasa / Language" iconName="language-outline" />
 
         <MenuItem 

@@ -27,6 +27,7 @@ import ChangePasswordScreen from './ChangePasswordScreen';
 import PrintCutScreen from './PrintCutScreen';
 import PreviewCutScreen from './PreviewCutScreen';
 import PrintCutLanjutanScreen from './PrintCutLanjutanScreen';
+import NotificationSettingsScreen from './NotificationSettingsScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,6 +97,7 @@ function AppNavigator() {
         <Stack.Screen name="PrintCut" component={PrintCutScreen} />
         <Stack.Screen name="PreviewCut" component={PreviewCutScreen} />
         <Stack.Screen name="PrintCutLanjutan" component={PrintCutLanjutanScreen} />
+        <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
