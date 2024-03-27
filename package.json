@@ -22,6 +22,7 @@
     "react-native": "^0.73.6",
     "react-native-alert-notification": "^0.4.0",
     "react-native-alert-pro": "^1.1.2",
+    "react-native-device-info": "^10.13.1",
     "react-native-image-picker": "^7.1.2",
     "react-native-modal": "^13.0.1",
     "react-native-picker-select": "^9.0.1",

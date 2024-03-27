@@ -7,16 +7,58 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  ImageBackground
+  ImageBackground,
+  ActivityIndicator
 } from 'react-native';
-import Carousel from 'react-native-snap-carousel';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
 const HomeScreen = ({navigation,route, notificationCount}) => {
   const [userName, setUserName] = useState('User');
+  const [activeSlide, setActiveSlide] = useState(0); // State for active slide index
+  const [blogPosts, setBlogPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const fetchBlogPosts = async () => {
+      try {
+        const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getBlog');
+        const data = await response.json();
+        console.log("=============")
+        console.log(data.data)
+        console.log("=============")
+        setBlogPosts(data.data);
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogPosts();
+  }, []);
+
+  const renderCarouselItemBlog = ({ item }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('BlogDetail', { blogId: item.id })} style={styles.slide}>
+    <Image source={{ uri: item.foto }} style={styles.carouselImage} />
+    <Text style={styles.titleStyle}>{item.judul}</Text>
+  </TouchableOpacity>
+  );
+  const pagination = () => {
+    return (
+      <Pagination
+        dotsLength={blogPosts.length}
+        activeDotIndex={activeSlide}
+        containerStyle={styles.paginationContainer}
+        dotStyle={styles.paginationDot}
+        inactiveDotStyle={styles.paginationInactiveDot}
+        inactiveDotOpacity={0.4}
+        inactiveDotScale={0.6}
+      />
+    );
+  };
 
   useEffect(() => {
     const loadUserData = async () => {
@@ -111,12 +153,66 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
           </ImageBackground>
         </TouchableOpacity>
       </View>
+      <View style={styles.actionSection}>
+        {/* ... other code for PrintOnly and PrintCut buttons ... */}
+
+        {/* Carousel component */}
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (
+          
+          <>
+            <Carousel
+              data={blogPosts}
+              renderItem={renderCarouselItemBlog}
+              sliderWidth={viewportWidth}
+              itemWidth={viewportWidth}
+              loop
+              onSnapToItem={(index) => setActiveSlide(index)}
+            />
+            {pagination()}
+          </>
+        )}
+      </View>
+
+
       {/* Define your bottom tab navigation here */}
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  slide: {
+    width: viewportWidth,
+    height: 250, // Adjust the height as needed
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  carouselImage: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute', // Make it fill the TouchableOpacity
+  },
+  titleStyle: {
+    color: 'black',
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop: 15, // Adjust the margin as needed
+  },ationContainer: {
+    // backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0
+  },
+  paginationDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginHorizontal: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.92)'
+  },
   promoText: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -197,6 +293,11 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   carouselImage: {
+    width: viewportWidth, // Width of the viewport
+    height: 200,
+    borderRadius: 8,
+  },
+  carouselImageBlog: {
     width: viewportWidth, // Width of the viewport
     height: 200,
     borderRadius: 8,

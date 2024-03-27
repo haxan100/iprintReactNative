@@ -14,6 +14,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Icon from 'react-native-vector-icons/Ionicons'; // Replace with the correct icon library if needed
+import DeviceInfo from 'react-native-device-info';
 
 const SettingsScreen = ({ navigation }) => {
   const [notificationCount, setNotificationCount] = useState(0); // Assume a state that holds the notification count
