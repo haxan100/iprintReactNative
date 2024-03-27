@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
   ImageBackground,
-  ActivityIndicator
+  ActivityIndicator,
+  Linking 
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -20,15 +21,14 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   const [userName, setUserName] = useState('User');
   const [activeSlide, setActiveSlide] = useState(0); // State for active slide index
   const [blogPosts, setBlogPosts] = useState([]);
+  const [MPs, setMPs] = useState([]);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
         const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getBlog');
         const data = await response.json();
-        console.log("=============")
-        console.log(data.data)
-        console.log("=============")
         setBlogPosts(data.data);
       } catch (error) {
         console.error('Error fetching blog posts:', error);
@@ -40,11 +40,55 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
     fetchBlogPosts();
   }, []);
 
+  useEffect(() => {
+    const fetchMPs = async () => {
+      try {
+        const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getMarketplace');
+        const data = await response.json();
+        setMPs(data.data);
+        console.log("=========================================")
+        console.log(data.data)
+        console.log("=========================================")
+      } catch (error) {
+        console.error('Error fetching blog posts:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMPs();
+  }, []);
+
   const renderCarouselItemBlog = ({ item }) => (
     <TouchableOpacity onPress={() => navigation.navigate('BlogDetail', { blogId: item.id_blog })} style={styles.slide}>
     <Image source={{ uri: item.foto }} style={styles.carouselImage} />
     <Text style={styles.titleStyle}>{item.judul}</Text>
   </TouchableOpacity>
+  );
+  const handlePress = async (url) => {
+    console.log('Trying to open URL:', url);    
+    try {
+      const supported = await Linking.openURL(url);
+      if (supported) {
+        await Linking.openURL(url);
+      } else {
+        console.error("Can't handle URL: " + url);
+      }
+    } catch (error) {
+      console.error('An error occurred', error);
+    }
+  };
+  // const renderCarouselItemMP = ({ item }) => (
+  //   <TouchableOpacity onPress={console.log({item})} style={styles.slide}>
+  //   <Image source={{ uri: item.foto }} style={styles.carouselImage} />
+  //   <Text style={styles.titleStyle}>{item.judul}</Text>
+  // </TouchableOpacity>
+  // );
+  const renderCarouselItemMP = ({ item }) => (
+    <TouchableOpacity onPress={() => handlePress(item.link)} style={styles.slide}>
+      <Image source={{ uri: item.foto }} style={styles.carouselImage} />
+      <Text style={styles.titleStyle}>{item.judul}</Text>
+    </TouchableOpacity>
   );
   const pagination = () => {
     return (
@@ -64,9 +108,7 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
     const loadUserData = async () => {
       try {
         const userDataString = await AsyncStorage.getItem('userData');
-        console.log('Retrieved from AsyncStorage:', userDataString); // Log the raw string
         const userData = JSON.parse(userDataString);
-        console.log('Parsed UserData:', userData); // Log the parsed object
         const firstName = userData?.nama_user.split(' ')[0] || 'User';
         setUserName(firstName);
 
@@ -113,14 +155,24 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
           </View>
         </TouchableOpacity>
       </View>
-      <Carousel
-        data={topSliderItems}
-        renderItem={renderCarouselItem}
-        sliderWidth={viewportWidth}
-        itemWidth={viewportWidth}
-        loop
-      />
-
+      <View style={styles.actionSection}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#0000ff" />
+        ) : (          
+          <>
+            <Carousel
+              data={blogPosts}
+              renderItem={renderCarouselItemBlog}
+              sliderWidth={viewportWidth}
+              itemWidth={viewportWidth}
+              loop
+              onSnapToItem={(index) => setActiveSlide(index)}
+            />
+            {pagination()}
+          </>
+        )}
+      </View>
+      
       <View style={styles.actionSection}>
       <Text style={styles.promoText}>Buat Kain Favorit-mu Sekarang</Text>
 
@@ -154,17 +206,13 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
         </TouchableOpacity>
       </View>
       <View style={styles.actionSection}>
-        {/* ... other code for PrintOnly and PrintCut buttons ... */}
-
-        {/* Carousel component */}
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
-        ) : (
-          
+        ) : (          
           <>
             <Carousel
-              data={blogPosts}
-              renderItem={renderCarouselItemBlog}
+              data={MPs}
+              renderItem={renderCarouselItemMP}
               sliderWidth={viewportWidth}
               itemWidth={viewportWidth}
               loop
@@ -174,9 +222,6 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
           </>
         )}
       </View>
-
-
-      {/* Define your bottom tab navigation here */}
     </ScrollView>
   );
 };
@@ -195,11 +240,15 @@ const styles = StyleSheet.create({
   },
   titleStyle: {
     color: 'black',
+    borderWidth:2,
+    borderRadius:10,
+    backgroundColor:'white',
     fontSize: 20,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     textAlign: 'center',
-    marginTop: 15, // Adjust the margin as needed
-  },ationContainer: {
+    marginTop: -51, // Adjust the margin as needed
+  },
+  ationContainer: {
     // backgroundColor: 'rgba(0, 0, 0, 0.75)',
     position: 'absolute',
     bottom: 0,
@@ -207,14 +256,17 @@ const styles = StyleSheet.create({
     right: 0
   },
   paginationDot: {
+    marginTop: -5, // Adjust the margin as needed
     width: 10,
     height: 10,
     borderRadius: 5,
     marginHorizontal: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.92)'
+    backgroundColor: 'black'
   },
   promoText: {
-    fontSize: 18,
+    marginTop: -5, // Adjust the margin as needed
+
+    fontSize: 21,
     fontWeight: 'bold',
     color:'#331864',
     // Positioning the text above the ImageBackground
@@ -224,14 +276,14 @@ const styles = StyleSheet.create({
     marginTop: 10, // Adjust the distance from the top
     marginBottom: 10, // Adjust the distance from the top
     // backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
-    padding: 10, // Padding inside the background
+    paddingTop: -51, // Padding inside the background
     borderRadius: 20, // Rounded corners
   },
   actionSection: {
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginVertical: 20,
+    marginVertical: 2,
   },
   card: {
     elevation: 3, // for shadow on Android
@@ -299,7 +351,7 @@ const styles = StyleSheet.create({
   },
   carouselImageBlog: {
     width: viewportWidth, // Width of the viewport
-    height: 200,
+    height: 210,
     borderRadius: 8,
   },
   optionContainer: {
