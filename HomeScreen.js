@@ -41,7 +41,7 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   }, []);
 
   const renderCarouselItemBlog = ({ item }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('BlogDetail', { blogId: item.id })} style={styles.slide}>
+    <TouchableOpacity onPress={() => navigation.navigate('BlogDetail', { blogId: item.id_blog })} style={styles.slide}>
     <Image source={{ uri: item.foto }} style={styles.carouselImage} />
     <Text style={styles.titleStyle}>{item.judul}</Text>
   </TouchableOpacity>

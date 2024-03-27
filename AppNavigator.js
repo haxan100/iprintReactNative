@@ -28,6 +28,7 @@ import PrintCutScreen from './PrintCutScreen';
 import PreviewCutScreen from './PreviewCutScreen';
 import PrintCutLanjutanScreen from './PrintCutLanjutanScreen';
 import NotificationSettingsScreen from './NotificationSettingsScreen';
+import BlogDetailScreen from './BlogDetailScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -98,6 +99,7 @@ function AppNavigator() {
         <Stack.Screen name="PreviewCut" component={PreviewCutScreen} />
         <Stack.Screen name="PrintCutLanjutan" component={PrintCutLanjutanScreen} />
         <Stack.Screen name="NotificationSettings" component={NotificationSettingsScreen} />
+        <Stack.Screen name="BlogDetail" component={BlogDetailScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
