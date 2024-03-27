@@ -24,6 +24,10 @@ const BlogDetailScreen = ({ route, navigation }) => {
       try {
         const response = await fetch(`https://heyiamhasan.com/porto/iprintNew/Api/getBlogById/${blogId}`);
         const json = await response.json();
+        console.log("=========================")
+        console.log(json.data)
+        console.log(blogId)
+        console.log("=========================")
         if (json.status) {
           setBlogData(json.data);
         } else {
@@ -47,31 +51,38 @@ const BlogDetailScreen = ({ route, navigation }) => {
   };
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Icon name="chevron-back" size={30} color="#6200EE" />
-        </TouchableOpacity>
-        <Text style={styles.title}>{blogData.judul}</Text>
-      </View>
-      {/* Content */}
-      <ScrollView style={styles.container}>
-        {isLoading ? (
-          <ActivityIndicator size="large" color="#6200EE" />
-        ) : blogData ? (
-          <View style={styles.content}>
-            <Image source={{ uri: blogData.foto }} style={styles.blogImage} />
-            <RenderHtml            
-            tagsStyles={tagsStyles}
-              contentWidth={width}
-              source={source}
-            />
-          </View>
-        ) : (
-          <Text>Blog tidak ditemukan!</Text>
-        )}
-      </ScrollView>
-    </SafeAreaView>
+        {/* Header */}
+        <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+            <Icon name="chevron-back" size={30} color="#6200EE" />
+            </TouchableOpacity>
+            {isLoading ? (
+            <Text style={styles.title}>Memuat...</Text>
+            ) : blogData ? (
+            <Text style={styles.title}>{blogData.judul}</Text>
+            ) : (
+            <Text style={styles.title}>Blog tidak ditemukan</Text>
+            )}
+        </View>
+        {/* Content */}
+        <ScrollView style={styles.container}>
+            {isLoading ? (
+            <ActivityIndicator size="large" color="#6200EE" />
+            ) : blogData ? (
+            <View style={styles.content}>
+                <Image source={{ uri: blogData.foto }} style={styles.blogImage} />
+                <RenderHtml
+                tagsStyles={tagsStyles}
+                contentWidth={width}
+                source={{ html: blogData.isi }}
+                />
+            </View>
+            ) : (
+            <Text>Blog tidak ditemukan!</Text>
+            )}
+        </ScrollView>
+        </SafeAreaView>
+
   );
 };
 
