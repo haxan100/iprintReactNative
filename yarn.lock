@@ -1711,10 +1711,10 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-picker/picker@^2.4.0", "@react-native-picker/picker@^2.7.0":
-  version "2.7.0"
-  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.7.0.tgz"
-  integrity sha512-QWxfYPMyaCxWwJ9VoiWX4enQ0OZA7Q0O4f5n86b03LqnVyTNVYBnt4dYDTROfDUT9NhlS7Vqy0B3OV4pfyyG1g==
+"@react-native-picker/picker@^2.4.0", "@react-native-picker/picker@^2.7.6":
+  version "2.7.6"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.7.6.tgz"
+  integrity sha512-Cs3PxRmE2vu6TofM9vt9TV8ZYFOtEPSupNxwoorH9lpkKM9HGG8QwK2i29KOEoODpUbtudKHUTtqhMZSuX9pgA==
 
 "@react-native/assets-registry@0.73.1":
   version "0.73.1"

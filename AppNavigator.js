@@ -32,6 +32,7 @@ import BlogDetailScreen from './BlogDetailScreen';
 import CheckoutScreen from './CheckoutScreen';
 import AddressSelection from './AddressSelection';
 import ShippingSelection from './ShippingSelection';
+import AddAddress from './AddAddress';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -106,6 +107,7 @@ function AppNavigator() {
         <Stack.Screen name="Checkout" component={CheckoutScreen} />
         <Stack.Screen name="AddressSelection" component={AddressSelection} />
         <Stack.Screen name="ShippingSelection" component={ShippingSelection} />
+        <Stack.Screen name="AddAddress" component={AddAddress} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>

@@ -1,14 +1,38 @@
-import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-
-const addresses = [
-  'Loui Michael | +6222888907\nJl Miadra Barat II No.77, Muara, Jengger. Batavia Java, 18979',
-  'Another Address | +1234567890\nJl Example No.123, Example City, 12345',
-  // ... add more addresses
-];
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import Axios from 'axios';
 
 const AddressSelection = ({ route, navigation }) => {
   const { setSelectedAddress } = route.params;
+  const [addresses, setAddresses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat'); // Replace {{url}} with the actual base URL
+        if (response.data && response.data.status) {
+          setAddresses(response.data.data);
+        } else {
+          console.log('No address data received:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching address data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAddresses();
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#5D3FD3" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -19,17 +43,17 @@ const AddressSelection = ({ route, navigation }) => {
           <TouchableOpacity
             style={styles.addressContainer}
             onPress={() => {
-              setSelectedAddress(item);
+              setSelectedAddress(item.id_alamat);
               navigation.goBack();
             }}
           >
-            <Text style={styles.addressText}>{item}</Text>
+            <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
           </TouchableOpacity>
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id_alamat.toString()}
       />
-      <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.confirmButtonText}>Konfirmasi</Text>
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddAddress')}>
+        <Text style={styles.addButtonText}>Tambah Alamat</Text>
       </TouchableOpacity>
     </View>
   );
@@ -47,7 +71,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   addressText: { fontSize: 16, color: '#333' },
-  confirmButton: {
+  addButton: {
     padding: 16,
     backgroundColor: '#5D3FD3',
     borderRadius: 8,
@@ -55,7 +79,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  confirmButtonText: { color: '#fff', textAlign: 'center', fontWeight: 'bold', fontSize: 16 },
+  addButtonText: { color: '#fff', textAlign: 'center', fontWeight: 'bold', fontSize: 16 },
+  loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
 
 export default AddressSelection;
