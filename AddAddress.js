@@ -131,11 +131,12 @@ const AddAddress = ({ navigation }) => {
         method: 'post',
         url: 'https://heyiamhasan.com/porto/iprintNew/Api/simpanAlamat',
         data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'multipart/form-data' ,},
       });
   
       if (response.data.status) {
-        Alert.alert('Success', 'Address saved successfully');
+            console.log(response.data.data)
+        Alert.alert('Success', 'Address saved successfully', [{ text: 'OK', onPress: () => navigation.navigate('AddressSelection',response.data.data) }]);
       } else {
         console.log("Failed response data:", response.data);
         Alert.alert('Failed', response.data.message || 'Failed to save address');
