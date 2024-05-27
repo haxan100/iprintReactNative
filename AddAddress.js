@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import Axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 
@@ -43,7 +43,7 @@ const AddAddress = ({ navigation }) => {
 
     try {
       console.log("Fetching Kabupaten for Provinsi ID:", provinsiId);
-      
+
       const formData = new FormData();
       formData.append('id_provinsi', provinsiId);
 
@@ -53,8 +53,6 @@ const AddAddress = ({ navigation }) => {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      console.log("Kabupaten Response:", response.data);
 
       if (response.data && response.data.status) {
         setKabupatenList(response.data.data);
@@ -72,8 +70,6 @@ const AddAddress = ({ navigation }) => {
     setKelurahanList([]);
 
     try {
-      console.log("Fetching Kecamatan for Kabupaten ID:", kabupatenId);
-      
       const formData = new FormData();
       formData.append('id_kabupaten', kabupatenId);
 
@@ -83,8 +79,6 @@ const AddAddress = ({ navigation }) => {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      console.log("Kecamatan Response:", response.data);
 
       if (response.data && response.data.status) {
         setKecamatanList(response.data.data);
@@ -101,8 +95,6 @@ const AddAddress = ({ navigation }) => {
     setKelurahanList([]);
 
     try {
-      console.log("Fetching Kelurahan for Kecamatan ID:", kecamatanId);
-
       const formData = new FormData();
       formData.append('id_kecamatan', kecamatanId);
 
@@ -112,8 +104,6 @@ const AddAddress = ({ navigation }) => {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
-      console.log("Kelurahan Response:", response.data);
 
       if (response.data && response.data.status) {
         setKelurahanList(response.data.data);
@@ -136,108 +126,141 @@ const AddAddress = ({ navigation }) => {
       formData.append('nomor_HP', nomorHP);
       formData.append('nama_penerima', namaPenerima);
       formData.append('nama_jalan', namaJalan);
-
+  
       const response = await Axios({
         method: 'post',
         url: 'https://heyiamhasan.com/porto/iprintNew/Api/simpanAlamat',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
+  
       if (response.data.status) {
-        Alert.alert('Success', 'Address saved successfully', [{ text: 'OK', onPress: () => navigation.navigate('AddressSelection') }]);
+        Alert.alert('Success', 'Address saved successfully');
       } else {
-        Alert.alert('Failed', 'Failed to save address');
+        console.log("Failed response data:", response.data);
+        Alert.alert('Failed', response.data.message || 'Failed to save address');
       }
     } catch (error) {
       console.error('Error saving address:', error);
       Alert.alert('Error', 'An error occurred while saving the address');
     }
   };
+  
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Tambah Alamat</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Nama Lengkap"
-        value={namaPenerima}
-        onChangeText={setNamaPenerima}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Nomor Telepon"
-        value={nomorHP}
-        onChangeText={setNomorHP}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Nama Jalan/Gedung, No.Rumah"
-        value={namaJalan}
-        onChangeText={setNamaJalan}
-      />
-      <Picker
-        selectedValue={provinsi}
-        onValueChange={(itemValue) => handleProvinsiChange(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Pilih Provinsi" value="" />
-        {provinsiList.map((item) => (
-          <Picker.Item key={item.id} label={item.name} value={item.id} />
-        ))}
-      </Picker>
-      <Picker
-        selectedValue={kota}
-        onValueChange={(itemValue) => handleKabupatenChange(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Pilih Kabupaten/Kota" value="" />
-        {kabupatenList.map((item) => (
-          <Picker.Item key={item.id} label={item.name} value={item.id} />
-        ))}
-      </Picker>
-      <Picker
-        selectedValue={kecamatan}
-        onValueChange={(itemValue) => handleKecamatanChange(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Pilih Kecamatan" value="" />
-        {kecamatanList.map((item) => (
-          <Picker.Item key={item.id} label={item.name} value={item.id} />
-        ))}
-      </Picker>
-      <Picker
-        selectedValue={kelurahan}
-        onValueChange={(itemValue) => setKelurahan(itemValue)}
-        style={styles.picker}
-      >
-        <Picker.Item label="Pilih Kelurahan" value="" />
-        {kelurahanList.map((item) => (
-          <Picker.Item key={item.id} label={item.name} value={item.id} />
-        ))}
-      </Picker>
-      <TextInput
-        style={styles.input}
-        placeholder="Kode Pos"
-        value={kodePos}
-        onChangeText={setKodePos}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Detail Alamat (Patokan, dll)"
-        value={detailAlamat}
-        onChangeText={setDetailAlamat}
-      />
-      <TouchableOpacity style={styles.saveButton} onPress={handleSaveAddress}>
-        <Text style={styles.saveButtonText}>Simpan Perubahan</Text>
-      </TouchableOpacity>
+      <View style={styles.headerContainer}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.backButton}>{'<'} Kembali</Text>
+        </TouchableOpacity>
+        <Text style={styles.header}>Tambah Alamat</Text>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Nama Lengkap"
+          placeholderTextColor={'#888585'}
+          value={namaPenerima}
+          onChangeText={setNamaPenerima}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Nomor Telepon"
+          placeholderTextColor={'#888585'}
+          value={nomorHP}
+          onChangeText={setNomorHP}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Nama Jalan/Gedung, No.Rumah"
+          placeholderTextColor={'#888585'}
+          value={namaJalan}
+          onChangeText={setNamaJalan}
+        />
+        <Picker
+          selectedValue={provinsi}
+          onValueChange={(itemValue) => handleProvinsiChange(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Pilih Provinsi" value="" />
+          {provinsiList.map((item) => (
+            <Picker.Item key={item.id} label={item.name} value={item.id} />
+          ))}
+        </Picker>
+        <Picker
+          selectedValue={kota}
+          onValueChange={(itemValue) => handleKabupatenChange(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Pilih Kabupaten/Kota" value="" />
+          {kabupatenList.map((item) => (
+            <Picker.Item key={item.id} label={item.name} value={item.id} />
+          ))}
+        </Picker>
+        <Picker
+          selectedValue={kecamatan}
+          onValueChange={(itemValue) => handleKecamatanChange(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Pilih Kecamatan" value="" />
+          {kecamatanList.map((item) => (
+            <Picker.Item key={item.id} label={item.name} value={item.id} />
+          ))}
+        </Picker>
+        <Picker
+          selectedValue={kelurahan}
+          onValueChange={(itemValue) => setKelurahan(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Pilih Kelurahan" value="" />
+          {kelurahanList.map((item) => (
+            <Picker.Item key={item.id} label={item.name} value={item.id} />
+          ))}
+        </Picker>
+        <TextInput
+          style={styles.input}
+          placeholder="Kode Pos"
+          placeholderTextColor={'#888585'}
+          value={kodePos}
+          keyboardType="numeric"
+          onChangeText={setKodePos}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Detail Alamat (Patokan, dll)"
+          placeholderTextColor={'#888585'}
+          value={detailAlamat}
+          onChangeText={setDetailAlamat}
+        />
+        <TouchableOpacity style={styles.saveButton} onPress={handleSaveAddress}>
+          <Text style={styles.saveButtonText}>Simpan Perubahan</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
+  container: { flex: 1, backgroundColor: '#fff' },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+  },
+  backButton: {
+    fontSize: 16,
+    color: '#5D3FD3',
+    marginRight: 8,
+  },
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#000',
+  },
+  scrollContainer: {
+    padding: 16,
+  },
   input: {
     padding: 16,
     backgroundColor: '#f9f9f9',

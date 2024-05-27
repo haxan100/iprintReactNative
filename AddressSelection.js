@@ -10,7 +10,7 @@ const AddressSelection = ({ route, navigation }) => {
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
-        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat'); // Replace {{url}} with the actual base URL
+        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
         if (response.data && response.data.status) {
           setAddresses(response.data.data);
         } else {
@@ -37,21 +37,27 @@ const AddressSelection = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Pilih Alamat</Text>
-      <FlatList
-        data={addresses}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.addressContainer}
-            onPress={() => {
-              setSelectedAddress(item.id_alamat);
-              navigation.goBack();
-            }}
-          >
-            <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.id_alamat.toString()}
-      />
+      {addresses.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Alamat kosong, Mohon Tambahkan alamat</Text>
+        </View>
+      ) : (
+        <FlatList
+          data={addresses}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.addressContainer}
+              onPress={() => {
+                setSelectedAddress(item.id_alamat);
+                navigation.goBack();
+              }}
+            >
+              <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
+            </TouchableOpacity>
+          )}
+          keyExtractor={(item) => item.id_alamat.toString()}
+        />
+      )}
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddAddress')}>
         <Text style={styles.addButtonText}>Tambah Alamat</Text>
       </TouchableOpacity>
@@ -61,7 +67,7 @@ const AddressSelection = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
+  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 16, textAlign: 'center', color: 'black' },
   addressContainer: {
     padding: 16,
     backgroundColor: '#f9f9f9',
@@ -81,6 +87,8 @@ const styles = StyleSheet.create({
   },
   addButtonText: { color: '#fff', textAlign: 'center', fontWeight: 'bold', fontSize: 16 },
   loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  emptyText: { fontSize: 18, color: '#333', textAlign: 'center' },
 });
 
 export default AddressSelection;
