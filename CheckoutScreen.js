@@ -8,10 +8,6 @@ import FormData from 'form-data';
 const CheckoutScreen = ({ navigation, route }) => {
   const { item } = route.params;
   const { id_keranjang } = item;  // Extract id_keranjang
-  console.log("====>>>>>")
-  console.log(route)
-  console.log("====>>>>>")
-  console.log("id_keranjang: ", id_keranjang)
 
   const [cartData, setCartData] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -50,12 +46,13 @@ const CheckoutScreen = ({ navigation, route }) => {
     try {
       const formData = new FormData();
       formData.append('id_keranjang', id_keranjang);
-      formData.append('expedisi', selectedShipping || 'jne');
+      // formData.append('expedisi', selectedShipping || 'jne');
+      formData.append('expedisi', 'jne');
       formData.append('ongkir', '1000'); // Example value, update as needed
       formData.append('metode_pembayaran', '1'); // Example value, update as needed
       formData.append('id_alamat', selectedAddress || 1);
       formData.append('harga_admin', '5000'); // Example value, update as needed
-
+      console.log(formData)
       const response = await Axios({
         method: 'post',
         url: 'https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiFromCart',
