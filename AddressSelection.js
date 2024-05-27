@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
 import Axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
 
 const AddressSelection = ({ route, navigation }) => {
@@ -8,24 +9,27 @@ const AddressSelection = ({ route, navigation }) => {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchAddresses = async () => {
-      try {
-        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
-        if (response.data && response.data.status) {
-          setAddresses(response.data.data);
-        } else {
-          console.log('No address data received:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error fetching address data:', error);
-      } finally {
-        setLoading(false);
+  const fetchAddresses = async () => {
+    try {
+      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
+      if (response.data && response.data.status) {
+        setAddresses(response.data.data);
+      } else {
+        console.log('No address data received:', response.data.message);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching address data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchAddresses();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      setLoading(true);
+      fetchAddresses();
+    }, [])
+  );
 
   const handleDeleteAddress = async (id_alamat) => {
     Alert.alert(
@@ -51,7 +55,6 @@ const AddressSelection = ({ route, navigation }) => {
               });
 
               if (response.data.status) {
-                Alert.alert('Success', 'Alamat berhasil dihapus');
                 setAddresses((prevAddresses) => prevAddresses.filter((address) => address.id_alamat !== id_alamat));
               } else {
                 Alert.alert('Failed', 'Gagal menghapus alamat');
@@ -97,7 +100,7 @@ const AddressSelection = ({ route, navigation }) => {
                 <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteAddress(item.id_alamat)}>
-               <MaterialCommunityIcons name="trash-can-outline" size={24} color="#D11A2A" />
+                <MaterialCommunityIcons name="trash-can-outline" size={24} color="#D11A2A" />
               </TouchableOpacity>
             </View>
           )}
