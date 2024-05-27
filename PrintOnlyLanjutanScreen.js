@@ -46,9 +46,17 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      console.log("==============")
+      console.log("==============>>")
       console.log(response.data)
-      console.log("==============")
+      
+      if (response.data.message === "Harap Login Terlebih Dahulu!") {
+        alert('Harap Login Terlebih Dahulu!');
+        navigation.navigate('Login');
+      } else {
+        alert(response.data.message);
+      }
+
+      console.log("==============>>")
       if(response.data.status){
         console.log(response.data)
         alert('Berhasil menambahkan ke keranjang')
