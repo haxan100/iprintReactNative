@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert 
 import Axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 
-const AddAddress = ({ navigation }) => {
+const AddAddress = ({ navigation, route }) => {
+  const { fetchAddresses } = route.params;
   const [namaPenerima, setNamaPenerima] = useState('');
   const [nomorHP, setNomorHP] = useState('');
   const [namaJalan, setNamaJalan] = useState('');
@@ -42,8 +43,6 @@ const AddAddress = ({ navigation }) => {
     setKelurahanList([]);
 
     try {
-      console.log("Fetching Kabupaten for Provinsi ID:", provinsiId);
-
       const formData = new FormData();
       formData.append('id_provinsi', provinsiId);
 
@@ -135,8 +134,10 @@ const AddAddress = ({ navigation }) => {
       });
   
       if (response.data.status) {
-            console.log(response.data.data)
-        Alert.alert('Success', 'Address saved successfully', [{ text: 'OK', onPress: () => navigation.navigate('AddressSelection',response.data.data) }]);
+        Alert.alert('Success', 'Address saved successfully', [{ text: 'OK', onPress: () => {
+          fetchAddresses();  // Refresh address list
+          navigation.navigate('AddressSelection');  // Navigate back
+        } }]);
       } else {
         console.log("Failed response data:", response.data);
         Alert.alert('Failed', response.data.message || 'Failed to save address');
@@ -146,7 +147,6 @@ const AddAddress = ({ navigation }) => {
       Alert.alert('Error', 'An error occurred while saving the address');
     }
   };
-  
 
   return (
     <View style={styles.container}>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import Axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const AddressSelection = ({ route, navigation }) => {
-  const { setSelectedAddress } = route.params;
+  const setSelectedAddress = route.params?.setSelectedAddress;  // Ensure function is correctly accessed
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -107,7 +107,7 @@ const AddressSelection = ({ route, navigation }) => {
           keyExtractor={(item) => item.id_alamat.toString()}
         />
       )}
-      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddAddress')}>
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddAddress', { fetchAddresses })}>
         <Text style={styles.addButtonText}>Tambah Alamat</Text>
       </TouchableOpacity>
     </View>
