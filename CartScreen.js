@@ -183,11 +183,11 @@ const CartScreen = ({navigation,onDelete }) => {
         renderEmptyCart()
       )}
 
-      <View style={styles.checkoutContainer}>
+      {/* <View style={styles.checkoutContainer}>
         <TouchableOpacity style={styles.checkoutButton}>
           <Text style={styles.checkoutButtonText}>Checkout (0)</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </View>
   );
 };

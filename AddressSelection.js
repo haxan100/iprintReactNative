@@ -13,6 +13,7 @@ const AddressSelection = ({ route, navigation }) => {
     try {
       const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
       if (response.data && response.data.status) {
+        console.log(response.data.data)
         setAddresses(response.data.data);
       } else {
         console.log('No address data received:', response.data.message);
@@ -93,7 +94,7 @@ const AddressSelection = ({ route, navigation }) => {
               <TouchableOpacity
                 style={styles.addressContainer}
                 onPress={() => {
-                  setSelectedAddress(item.id_alamat);
+                  setSelectedAddress({ id: item.id_alamat, nama: `${item.nama_penerima} | +${item.nomor_hp} | ${item.detail}` });
                   navigation.goBack();
                 }}
               >

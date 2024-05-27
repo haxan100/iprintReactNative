@@ -7,7 +7,7 @@ import FormData from 'form-data';
 
 const CheckoutScreen = ({ navigation, route }) => {
   const { item } = route.params;
-  const { id_keranjang } = item;  // Extract id_keranjang
+  const { id_keranjang } = item;
 
   const [cartData, setCartData] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
@@ -22,9 +22,8 @@ const CheckoutScreen = ({ navigation, route }) => {
           url: `https://heyiamhasan.com/porto/iprintNew/Api/getKeranjangById/${id_keranjang}`,
           headers: { 'Content-Type': 'application/json' },
         });
-        console.log("Response from getKeranjangById: ", response.data);
         if (response.data && response.data.status) {
-          setCartData(response.data.data ? [response.data.data] : []); // Ensure cartData is an array
+          setCartData(response.data.data ? [response.data.data] : []);
         } else {
           console.log('No cart data received:', response.data.message);
         }
@@ -41,35 +40,46 @@ const CheckoutScreen = ({ navigation, route }) => {
       return;
     }
 
+    if (!selectedAddress) {
+      Alert.alert('Error', 'Please select an address.');
+      return;
+    }
+
     const item = cartData[0];
 
     try {
       const formData = new FormData();
       formData.append('id_keranjang', id_keranjang);
-      // formData.append('expedisi', selectedShipping || 'jne');
       formData.append('expedisi', 'jne');
       formData.append('ongkir', '1000'); // Example value, update as needed
-      formData.append('metode_pembayaran', '1'); // Example value, update as needed
-      formData.append('id_alamat', selectedAddress || 1);
-      formData.append('harga_admin', '5000'); // Example value, update as needed
-      console.log(formData)
-      const response = await Axios({
-        method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiFromCart',
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
+      formData.append('metode_pembayaran', 1); // Example value, update as needed
+      formData.append('id_alamat', selectedAddress.id);
+      console.log(formData);
+
+      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiFromCart', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      console.log("=======xxxCreateTransaksixx==========")
-      console.log(response)
-      console.log("=======CreateTransaksixxxxx==========")
+
+      console.log("=======xxxCreateTransaksixx==========");
+      console.log(response.data);
+      console.log("=======CreateTransaksixxxxx==========");
+      
       if (response.data.status) {
         Alert.alert('Success', 'Transaction created successfully');
+        setTimeout(() => {
+          navigation.navigate('Beranda')
+        }, 1500);
       } else {
         console.log("Failed response data:", response.data);
         Alert.alert('Failed', response.data.message || 'Transaction failed');
       }
     } catch (error) {
       console.error("Error during transaction creation:", error);
+      if (error.response) {
+        console.error("Server responded with:", error.response.data);
+      }
       Alert.alert('Error', 'An error occurred while creating the transaction');
     }
   };
@@ -78,7 +88,7 @@ const CheckoutScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Check Out</Text>
       <TouchableOpacity style={styles.selectContainer} onPress={() => navigation.navigate('AddressSelection', { setSelectedAddress })}>
-        <Text style={styles.selectText}>{selectedAddress ? selectedAddress : 'Pilih Alamat'}</Text>
+        <Text style={styles.selectText}>{selectedAddress ? selectedAddress.nama : 'Pilih Alamat'}</Text>
       </TouchableOpacity>
       <FlatList
         data={cartData}
