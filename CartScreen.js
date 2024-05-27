@@ -82,9 +82,8 @@ const CartScreen = ({navigation,onDelete }) => {
     );
   };
   const handlePesanSekarang = (item) => {
-    console.log("Pesan Sekarang pressed for item: ", item);
-    // Implement your action here, such as navigating to a confirmation screen
-    // or directly handling the order logic
+    console.log(item)
+    navigation.navigate('Checkout', { item })
   };
   const renderEmptyCart = () => {
     return (

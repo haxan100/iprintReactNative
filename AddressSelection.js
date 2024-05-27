@@ -23,7 +23,7 @@ const AddressSelection = ({ route, navigation }) => {
               navigation.goBack();
             }}
           >
-            <Text>{item}</Text>
+            <Text style={styles.addressText}>{item}</Text>
           </TouchableOpacity>
         )}
         keyExtractor={(item, index) => index.toString()}
@@ -37,10 +37,25 @@ const AddressSelection = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, backgroundColor: '#fff' },
-  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
-  addressContainer: { padding: 16, backgroundColor: '#f9f9f9', borderRadius: 8, marginBottom: 16 },
-  confirmButton: { padding: 16, backgroundColor: '#5D3FD3', borderRadius: 8, marginTop: 16 },
-  confirmButtonText: { color: '#fff', textAlign: 'center', fontWeight: 'bold' },
+  header: { fontSize: 24, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
+  addressContainer: {
+    padding: 16,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    marginBottom: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+  },
+  addressText: { fontSize: 16, color: '#333' },
+  confirmButton: {
+    padding: 16,
+    backgroundColor: '#5D3FD3',
+    borderRadius: 8,
+    marginTop: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmButtonText: { color: '#fff', textAlign: 'center', fontWeight: 'bold', fontSize: 16 },
 });
 
 export default AddressSelection;
