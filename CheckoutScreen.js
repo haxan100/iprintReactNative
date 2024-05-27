@@ -8,6 +8,9 @@ import FormData from 'form-data';
 const CheckoutScreen = ({ navigation, route }) => {
   const { item } = route.params;
   const { id_keranjang } = item;  // Extract id_keranjang
+  console.log("====>>>>>")
+  console.log(route)
+  console.log("====>>>>>")
   console.log("id_keranjang: ", id_keranjang)
 
   const [cartData, setCartData] = useState([]);
@@ -23,15 +26,9 @@ const CheckoutScreen = ({ navigation, route }) => {
           url: `https://heyiamhasan.com/porto/iprintNew/Api/getKeranjangById/${id_keranjang}`,
           headers: { 'Content-Type': 'application/json' },
         });
-        
-        console.log("=======xxxtKeranjaxx==========")
-        console.log(response.data)
-        console.log("=======tKeranjaxxxxx==========")
-
-        // console.log("Response from getKeranjangById: ", response.data);
+        console.log("Response from getKeranjangById: ", response.data);
         if (response.data && response.data.status) {
           setCartData(response.data.data ? [response.data.data] : []); // Ensure cartData is an array
-          setNote(response.data.data.catatan)
         } else {
           console.log('No cart data received:', response.data.message);
         }
@@ -52,19 +49,16 @@ const CheckoutScreen = ({ navigation, route }) => {
 
     try {
       const formData = new FormData();
-      formData.append('tipe_kain', item.tipe_kain);
-      formData.append('id_kain', item.id_kain || '');
-      formData.append('panjang', item.panjang);
-      formData.append('gambar', item.gambar);
-      formData.append('keterangan', note);
-      formData.append('expedisi', selectedShipping);
-      formData.append('ongkir', '9000'); // Example value, update as needed
+      formData.append('id_keranjang', id_keranjang);
+      formData.append('expedisi', selectedShipping || 'jne');
+      formData.append('ongkir', '1000'); // Example value, update as needed
       formData.append('metode_pembayaran', '1'); // Example value, update as needed
-      formData.append('id_alamat', selectedAddress);
+      formData.append('id_alamat', selectedAddress || 1);
+      formData.append('harga_admin', '5000'); // Example value, update as needed
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksi',
+        url: 'https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiFromCart',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -74,10 +68,11 @@ const CheckoutScreen = ({ navigation, route }) => {
       if (response.data.status) {
         Alert.alert('Success', 'Transaction created successfully');
       } else {
-        Alert.alert('Failed', 'Transaction failed');
+        console.log("Failed response data:", response.data);
+        Alert.alert('Failed', response.data.message || 'Transaction failed');
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error during transaction creation:", error);
       Alert.alert('Error', 'An error occurred while creating the transaction');
     }
   };
