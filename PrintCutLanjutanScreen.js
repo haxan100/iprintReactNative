@@ -24,7 +24,8 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
   };
   const handlePesanSekarang = () => {
     // Handle pesan sekarang action
-    console.log("Pesan Sekarang dengan spesifikasi:", { lebar, panjang, duplikasiMotif, deskripsi });
+    navigation.navigate('Checkout',{ lebar, panjang, duplikasiMotif, deskripsi });    
+    console.log("Pesan Sekarang dengan spesifikasix:", { lebar, panjang, duplikasiMotif, deskripsi });
     // Implementasi fungsi pesan sekarang
   };
 
