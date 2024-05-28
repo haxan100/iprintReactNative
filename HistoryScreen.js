@@ -11,38 +11,47 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Axios from 'axios';
 import { formatRupiah } from './utils/currencyUtils';
+import { Picker } from '@react-native-picker/picker';
 
 const HistoryScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [dataLoading, setDataLoading] = useState(true);
+  const [status, setStatus] = useState(null);
+
+  const fetchOrders = async (status) => {
+    try {
+      const formData = new FormData();
+      formData.append('status', status);
+
+      const response = await Axios({
+        method: 'post',
+        url: 'https://heyiamhasan.com/porto/iprintNew/Api/ListRiwayatTransaksi',
+        data: formData,
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (response.data && response.data.status) {
+        setOrders(response.data.data);
+      } else {
+        console.log('No orders data received:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching orders data:', error);
+    } finally {
+      setDataLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const formData = new FormData();
-        formData.append('status', 'null'); // Update the status value according to your requirements
-
-        const response = await Axios({
-          method: 'post',
-          url: 'https://heyiamhasan.com/porto/iprintNew/Api/ListRiwayatTransaksi',
-          data: formData,
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-
-        if (response.data && response.data.status) {
-          setOrders(response.data.data);
-        } else {
-          console.log('No orders data received:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error fetching orders data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchOrders();
+    fetchOrders(status);
+    setLoading(false); // Set loading to false after initial fetch
   }, []);
+
+  useEffect(() => {
+    setDataLoading(true);
+    fetchOrders(status);
+  }, [status]);
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -50,7 +59,7 @@ const HistoryScreen = ({ navigation }) => {
       <View style={styles.itemDetail}>
         <Text style={styles.itemTitle}>{item.judul}</Text>
         <Text style={styles.itemInfo}>Kode Transaksi: {item.kode_transaksi}</Text>
-        <Text style={styles.itemPrice}>Rp {formatRupiah(item.total_pesanan.toString())} </Text>
+        <Text style={styles.itemPrice}>Rp {formatRupiah(item.total_pesanan.toString())}</Text>
         <TouchableOpacity style={styles.orderButton} onPress={() => {/* Handle order again */}}>
           <Text style={styles.orderButtonText}>Pesan Lagi</Text>
         </TouchableOpacity>
@@ -81,11 +90,32 @@ const HistoryScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <FlatList
-        data={orders}
-        renderItem={renderItem}
-        keyExtractor={item => item.id_transaksi.toString()}
-      />
+      <Picker
+        selectedValue={status}
+        style={styles.picker}
+        onValueChange={(itemValue) => {
+          setStatus(itemValue);
+          setDataLoading(true);
+        }}
+      >
+        <Picker.Item label="Semua" value={null} />
+        <Picker.Item label="Pending" value="1" />
+        <Picker.Item label="Sudah Bayar" value="2" />
+        <Picker.Item label="Selesai" value="3" />
+        <Picker.Item label="Batal" value="4" />
+      </Picker>
+
+      {dataLoading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#5D3FD3" />
+        </View>
+      ) : (
+        <FlatList
+          data={orders}
+          renderItem={renderItem}
+          keyExtractor={item => item.id_transaksi.toString()}
+        />
+      )}
     </View>
   );
 };
@@ -172,6 +202,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  pickerContainer: {
+    marginVertical: 10,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  picker: {
+    padding: 16,
+    backgroundColor: '#DBD8E0',
+    borderRadius: 8,
+    marginBottom: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    fontSize: 16,
+    color: '#333',
+  },
 });
 
 export default HistoryScreen;
