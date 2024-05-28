@@ -6,36 +6,64 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Pastikan sudah menginstal package ini
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Axios from 'axios';
 
-const HistoryScreen = ({ navigation }) => { // Tambahkan navigation sebagai props
-  const [orders, setOrders] = useState([]); // Gunakan state orders
+const HistoryScreen = ({ navigation }) => {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Asumsikan Anda memanggil API di sini untuk mendapatkan riwayat pesanan
-    // Sementara ini, saya akan menggunakan data dummy
-    const fetchedOrders = [
-      // Contoh data dummy
-      { id: '1', title: 'Print Only', quantity: '2', price: '47000', image: 'https://yourdomain.com/path/to/image1.jpg' },
-      // Tambahkan data lainnya di sini
-    ];
-    setOrders(fetchedOrders);
+    const fetchOrders = async () => {
+      try {
+        const formData = new FormData();
+        formData.append('status', 'null'); // Update the status value according to your requirements
+
+        const response = await Axios({
+          method: 'post',
+          url: 'https://heyiamhasan.com/porto/iprintNew/Api/ListRiwayatTransaksi',
+          data: formData,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+
+        if (response.data && response.data.status) {
+          setOrders(response.data.data);
+        } else {
+          console.log('No orders data received:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching orders data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
   }, []);
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Image source={{ uri: item.image }} style={styles.itemImage} />
+      <Image source={{ uri: 'https://yourdomain.com/path/to/image1.jpg' }} style={styles.itemImage} />
       <View style={styles.itemDetail}>
-        <Text style={styles.itemTitle}>{item.title}</Text>
-        <Text style={styles.itemInfo}>Bahan - 1.5 x 150 M (x {item.quantity})</Text>
-        <Text style={styles.itemPrice}>Rp {item.price}</Text>
+        <Text style={styles.itemTitle}>{item.judul}</Text>
+        <Text style={styles.itemInfo}>Kode Transaksi: {item.kode_transaksi}</Text>
+        <Text style={styles.itemPrice}>Rp {item.total_pesanan}</Text>
         <TouchableOpacity style={styles.orderButton} onPress={() => {/* Handle order again */}}>
           <Text style={styles.orderButtonText}>Pesan Lagi</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" color="#5D3FD3" />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screenContainer}>
@@ -47,7 +75,7 @@ const HistoryScreen = ({ navigation }) => { // Tambahkan navigation sebagai prop
         <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
           <Icon name="cart" size={24} color="#5D3FD3" />
           <View style={styles.notificationBadge}>
-            <Text style={styles.notificationCount}>5</Text>
+            <Text style={styles.notificationCount}></Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -55,11 +83,12 @@ const HistoryScreen = ({ navigation }) => { // Tambahkan navigation sebagai prop
       <FlatList
         data={orders}
         renderItem={renderItem}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id_transaksi.toString()}
       />
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
@@ -68,12 +97,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingTop: 10,
     paddingBottom: 10,
-    backgroundColor: 'white', // atau warna yang sesuai dengan desain Anda
+    backgroundColor: 'white',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000', // atau warna yang sesuai dengan desain Anda
+    color: '#000',
   },
   cartIcon: {
     position: 'relative',
@@ -97,7 +126,7 @@ const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white'
+    backgroundColor: 'white',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -105,31 +134,31 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginBottom: 10,
     overflow: 'hidden',
-    elevation: 3
+    elevation: 3,
   },
   itemImage: {
     width: 100,
     height: 100,
-    borderRadius: 10
+    borderRadius: 10,
   },
   itemDetail: {
     flex: 1,
     padding: 10,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   itemTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333'
+    color: '#333',
   },
   itemInfo: {
     fontSize: 16,
-    color: '#555'
+    color: '#555',
   },
   itemPrice: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FF4500'
+    color: '#FF4500',
   },
   orderButton: {
     backgroundColor: '#FF4500',
@@ -140,7 +169,8 @@ const styles = StyleSheet.create({
   orderButtonText: {
     color: 'white',
     textAlign: 'center',
-  }
+  },
+  loaderContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
 
 export default HistoryScreen;
