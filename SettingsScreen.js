@@ -43,7 +43,13 @@ const SettingsScreen = ({ navigation }) => {
       if (response.data && response.data.status) {
         setProfile(response.data.data);
       } else {
-        console.log('Failed to fetch profile:', response.data.message);
+
+        if (response.data.message === "Harap Login Terlebih Dahulu!") {
+          alert('Harap Login Terlebih Dahulu!');
+          navigation.navigate('Login');
+        } else {
+          alert(response.data.message);
+        }
       }
     } catch (error) {
       console.error('Error fetching profile data:', error);
