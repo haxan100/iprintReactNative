@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Axios from 'axios';
+import { formatRupiah } from './utils/currencyUtils';
 
 const HistoryScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
@@ -49,7 +50,7 @@ const HistoryScreen = ({ navigation }) => {
       <View style={styles.itemDetail}>
         <Text style={styles.itemTitle}>{item.judul}</Text>
         <Text style={styles.itemInfo}>Kode Transaksi: {item.kode_transaksi}</Text>
-        <Text style={styles.itemPrice}>Rp {item.total_pesanan}</Text>
+        <Text style={styles.itemPrice}>Rp {formatRupiah(item.total_pesanan.toString())} </Text>
         <TouchableOpacity style={styles.orderButton} onPress={() => {/* Handle order again */}}>
           <Text style={styles.orderButtonText}>Pesan Lagi</Text>
         </TouchableOpacity>
