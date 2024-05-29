@@ -84,6 +84,14 @@ const CheckoutScreen = ({ navigation, route }) => {
     }
   };
 
+  const handleSelectShipping = () => {
+    if (!selectedAddress) {
+      Alert.alert('Mohon pilih alamat terlebih dahulu');
+      return;
+    }
+    navigation.navigate('ShippingSelection', { setSelectedShipping });
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Check Out</Text>
@@ -103,7 +111,7 @@ const CheckoutScreen = ({ navigation, route }) => {
         )}
         keyExtractor={(item) => item.id_keranjang.toString()}
       />
-      <TouchableOpacity style={styles.selectContainer} onPress={() => navigation.navigate('ShippingSelection', { setSelectedShipping })}>
+      <TouchableOpacity style={styles.selectContainer} onPress={handleSelectShipping}>
         <Text style={styles.selectText}>{selectedShipping ? selectedShipping : 'Pilih Expedisi'}</Text>
       </TouchableOpacity>
       <View style={styles.totalContainer}>
