@@ -32,7 +32,7 @@ const HistoryScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [dataLoading, setDataLoading] = useState(true);
-  const [status, setStatus] = useState(null);
+  const [status, setStatus] = useState('');
 
   const fetchOrders = async (status) => {
     try {
@@ -47,6 +47,7 @@ const HistoryScreen = ({ navigation }) => {
       });
 
       if (response.data && response.data.status) {
+        console.log(response.data)
         setOrders(response.data.data);
       } else {
         console.log('No orders data received:', response.data.message);
@@ -69,7 +70,10 @@ const HistoryScreen = ({ navigation }) => {
   }, [status]);
 
   const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
+    <TouchableOpacity
+      style={styles.itemContainer}
+      onPress={() => navigation.navigate('TransactionDetail', { id_transaksi: item.id_transaksi })}
+    >
       <Image source={{ uri: item.gambar }} style={styles.itemImage} />
       <View style={styles.itemDetail}>
         <Text style={styles.itemTitle}>{item.judul}</Text>
@@ -80,7 +84,7 @@ const HistoryScreen = ({ navigation }) => {
           <Text style={styles.orderButtonText}>Pesan Lagi</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   if (loading) {
@@ -97,7 +101,7 @@ const HistoryScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Riwayat</Text>
+        <Text style={styles.headerTitle}>Riwayata</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
           <Icon name="cart" size={24} color="#5D3FD3" />
           <View style={styles.notificationBadge}>
@@ -114,7 +118,7 @@ const HistoryScreen = ({ navigation }) => {
           setDataLoading(true);
         }}
       >
-        <Picker.Item label="Semua" value={null} />
+        <Picker.Item label="Semua" value='' />
         <Picker.Item label="Pending" value="1" />
         <Picker.Item label="Sudah Bayar" value="2" />
         <Picker.Item label="Selesai" value="3" />
