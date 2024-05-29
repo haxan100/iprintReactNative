@@ -13,6 +13,21 @@ import Axios from 'axios';
 import { formatRupiah } from './utils/currencyUtils';
 import { Picker } from '@react-native-picker/picker';
 
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'Pending':
+      return '#FFA500';
+    case 'Sudah Bayar':
+      return '#008000';
+    case 'Selesai':
+      return '#0000FF';
+    case 'Batal':
+      return '#FF0000';
+    default:
+      return '#000';
+  }
+};
+
 const HistoryScreen = ({ navigation }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,10 +70,11 @@ const HistoryScreen = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
-      <Image source={{ uri: 'https://yourdomain.com/path/to/image1.jpg' }} style={styles.itemImage} />
+      <Image source={{ uri: item.gambar }} style={styles.itemImage} />
       <View style={styles.itemDetail}>
         <Text style={styles.itemTitle}>{item.judul}</Text>
         <Text style={styles.itemInfo}>Kode Transaksi: {item.kode_transaksi}</Text>
+        <Text style={[styles.itemStatus, { color: getStatusColor(item.nama_status) }]}>{item.nama_status}</Text>
         <Text style={styles.itemPrice}>Rp {formatRupiah(item.total_pesanan.toString())}</Text>
         <TouchableOpacity style={styles.orderButton} onPress={() => {/* Handle order again */}}>
           <Text style={styles.orderButtonText}>Pesan Lagi</Text>
@@ -185,6 +201,10 @@ const styles = StyleSheet.create({
   itemInfo: {
     fontSize: 16,
     color: '#555',
+  },
+  itemStatus: {
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   itemPrice: {
     fontSize: 16,
