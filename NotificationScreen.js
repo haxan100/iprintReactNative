@@ -1,6 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 
 const NotificationScreen = ({ navigation }) => {
   // Dummy data for notifications
@@ -15,18 +23,53 @@ const NotificationScreen = ({ navigation }) => {
       title: 'Pembayaran Berhasil!',
       details: 'Pembayaran No. Pesanan : 22009IJLM9G telah berhasil kami konfirmasi, pesananmu segera diproses',
     },
+    {
+      id: '3',
+      title: 'Pembayaran Berhasil!',
+      details: 'Pembayaran No. Pesanan : 22009IJLM9G telah berhasil kami konfirmasi, pesananmu segera diproses',
+    },
     // ... Add more notifications here
   ]);
 
+  const handleDelete = (id) => {
+    Alert.alert(
+      'Hapus Notifikasi',
+      'Apakah Anda yakin ingin menghapus notifikasi ini?',
+      [
+        {
+          text: 'Batal',
+          style: 'cancel',
+        },
+        {
+          text: 'Ya',
+          onPress: () => {
+            setNotifications(notifications.filter(notification => notification.id !== id));
+          },
+        },
+      ]
+    );
+  };
+
+  const renderRightActions = (id) => (
+    <TouchableOpacity
+      style={styles.deleteButton}
+      onPress={() => handleDelete(id)}
+    >
+      <Text style={styles.deleteButtonText}>Hapus</Text>
+    </TouchableOpacity>
+  );
+
   const renderItem = ({ item }) => (
-    <View style={styles.notificationCard}>
-      <Text style={styles.notificationTitle}>{item.title}</Text>
-      <Text style={styles.notificationDetails}>{item.details}</Text>
-    </View>
+    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+      <View style={styles.notificationCard}>
+        <Text style={styles.notificationTitle}>{item.title}</Text>
+        <Text style={styles.notificationDetails}>{item.details}</Text>
+      </View>
+    </Swipeable>
   );
 
   return (
-    <View style={styles.screenContainer}>
+    <GestureHandlerRootView style={styles.screenContainer}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -40,7 +83,7 @@ const NotificationScreen = ({ navigation }) => {
           </View>
         </TouchableOpacity>
       </View>
-      
+
       {/* Notifications List */}
       <FlatList
         data={notifications}
@@ -48,7 +91,7 @@ const NotificationScreen = ({ navigation }) => {
         keyExtractor={item => item.id}
         style={styles.notificationsList}
       />
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -69,11 +112,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#5D3FD3',
-    // Removed headerTitle styling from here that was meant for the screen title
   },
-  backButton: {
-    // Style if necessary
-  },
+  backButton: {},
   cartButton: {
     position: 'relative',
   },
@@ -93,9 +133,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: 'bold',
   },
-  notificationsList: {
-    // Removed paddingTop to align the list below the header
-  },
+  notificationsList: {},
   notificationCard: {
     backgroundColor: '#fff',
     borderRadius: 8,
@@ -121,7 +159,19 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#333',
   },
-  // Removed redundant header and headerTitle styles
+  deleteButton: {
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+    height: '100%',
+    borderRadius: 8,
+    marginVertical: 8,
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
 });
 
 export default NotificationScreen;
