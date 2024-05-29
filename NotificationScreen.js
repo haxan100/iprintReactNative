@@ -93,7 +93,7 @@ const NotificationScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.cartButton}>
           <Icon name="cart" size={24} color="#5D3FD3" />
           <View style={styles.notificationBadge}>
-            <Text style={styles.notificationCount}>9</Text>
+            <Text style={styles.notificationCount}></Text>
           </View>
         </TouchableOpacity>
       </View>
