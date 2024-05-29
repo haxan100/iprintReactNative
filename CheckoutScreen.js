@@ -24,7 +24,9 @@ const CheckoutScreen = ({ navigation, route }) => {
           url: `https://heyiamhasan.com/porto/iprintNew/Api/getKeranjangById/${id_keranjang}`,
           headers: { 'Content-Type': 'application/json' },
         });
+        console.log("oooooooooooooooooo")
         console.log(response.data)
+        console.log("oooooooooooooooooo")
         if (response.data && response.data.status) {
           setCartData(response.data.data ? [response.data.data] : []);
         } else {

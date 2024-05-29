@@ -49,8 +49,8 @@ const ShippingSelection = ({ route, navigation }) => {
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
-        <Text>Tunggu Sesaat, Sedang Kalkulasi Ongkir</Text>
         <ActivityIndicator size="large" color="#5D3FD3" />
+        <Text style={styles.locationText}>Tunggu Sesaat, Sedang Kalkulasi Ongkir</Text>
       </View>
     );
   }
