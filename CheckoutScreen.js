@@ -4,6 +4,7 @@ import Axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from './utils/Api';
 import FormData from 'form-data';
+import { formatRupiah } from './utils/currencyUtils';
 
 const CheckoutScreen = ({ navigation, route }) => {
   const { item } = route.params;
@@ -12,6 +13,7 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [cartData, setCartData] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedShipping, setSelectedShipping] = useState(null);
+  const [selectedShippingongkir, setSelectedShippingongkir] = useState(null);
   const [note, setNote] = useState('');
 
   useEffect(() => {
@@ -22,6 +24,7 @@ const CheckoutScreen = ({ navigation, route }) => {
           url: `https://heyiamhasan.com/porto/iprintNew/Api/getKeranjangById/${id_keranjang}`,
           headers: { 'Content-Type': 'application/json' },
         });
+        console.log(response.data)
         if (response.data && response.data.status) {
           setCartData(response.data.data ? [response.data.data] : []);
         } else {
@@ -50,8 +53,8 @@ const CheckoutScreen = ({ navigation, route }) => {
     try {
       const formData = new FormData();
       formData.append('id_keranjang', id_keranjang);
-      formData.append('expedisi', 'jne');
-      formData.append('ongkir', '1000'); // Example value, update as needed
+      formData.append('expedisi', selectedShipping);
+      formData.append('ongkir', selectedShippingongkir); // Example value, update as needed
       formData.append('metode_pembayaran', 1); // Example value, update as needed
       formData.append('id_alamat', selectedAddress.id);
       console.log(formData);
@@ -89,7 +92,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       Alert.alert('Mohon pilih alamat terlebih dahulu');
       return;
     }
-    navigation.navigate('ShippingSelection', { setSelectedShipping });
+    navigation.navigate('ShippingSelection', { setSelectedShipping, id_alamat: selectedAddress.id ,setSelectedShippingongkir});
   };
 
   return (
@@ -112,10 +115,10 @@ const CheckoutScreen = ({ navigation, route }) => {
         keyExtractor={(item) => item.id_keranjang.toString()}
       />
       <TouchableOpacity style={styles.selectContainer} onPress={handleSelectShipping}>
-        <Text style={styles.selectText}>{selectedShipping ? selectedShipping : 'Pilih Expedisi'}</Text>
+        <Text style={styles.selectText}>{selectedShipping ? selectedShipping +" -  " + formatRupiah(selectedShippingongkir) : 'Pilih Expedisi'}</Text>
       </TouchableOpacity>
       <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Grand Total: Rp {cartData.reduce((total, item) => total + parseFloat(item.harga_total), 0)}</Text>
+        <Text style={styles.totalText}>Grand Total: Rp {cartData.reduce((total, item) => total + parseFloat(item.harga_total)+selectedShippingongkir, 0)}</Text>
       </View>
       <TextInput
         style={styles.noteInput}

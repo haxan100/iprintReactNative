@@ -29,7 +29,9 @@ const TransactionDetail = ({ route, navigation }) => {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+      console.log("============xxxxxxxxxxxx========");
       console.log(response.data);
+      console.log("============xxxxxxxxxxxx========");
       if (response.data && response.data.status) {
         setTransaction(response.data.data);
       } else {
@@ -47,7 +49,6 @@ const TransactionDetail = ({ route, navigation }) => {
   }, [id_transaksi]);
 
   const copyToClipboard = (text) => {
-    
     Clipboard.setString(text);
     Toast.show('Kode resi has been copied to clipboard');
   };
@@ -76,12 +77,13 @@ const TransactionDetail = ({ route, navigation }) => {
           <Text style={[styles.transactionStatus, { color: getStatusColor(transaction.nama_status) }]}>
             Status: {transaction.nama_status}
           </Text>
-          <Text style={styles.transactionPrice}>Total: Rp {formatRupiah(transaction.total_pesanan.toString())}</Text>
           <Text style={styles.transactionDate}>Tanggal: {transaction.created_at}</Text>
-          <Text style={styles.transactionInfo}>Panjang: {transaction.panjang}</Text>
-          <Text style={styles.transactionInfo}>Keterangan: {transaction.keterangan}</Text>
+          <Text style={styles.transactionInfo}>Panjang: {transaction.panjang} Meter</Text>
+          <Text style={styles.transactionInfo}>Keterangan: {transaction.keterangan} </Text>
           <Text style={styles.transactionInfo}>Expedisi: {transaction.expedisi}</Text>
-          {/* <Text style={styles.transactionPrice}>Ongkir: Rp {formatRupiah(transaction.ongkir.toString())}</Text> */}
+          <Text style={styles.transactionInfo}>Harga Total per Meter: Rp {formatRupiah(transaction.total.toString())}</Text>
+          <Text style={styles.transactionInfo}>Ongkir: Rp {formatRupiah(transaction.ongkir.toString())}</Text>
+          <Text style={styles.transactionInfo}>Admin: Rp {formatRupiah(transaction.admin.toString())}</Text>
           {transaction.no_resi && (
             <TouchableOpacity style={styles.trackingContainer} onPress={() => copyToClipboard(transaction.no_resi)}>
               <Text style={styles.trackingNumber}>Kode Resi: </Text>
@@ -89,6 +91,7 @@ const TransactionDetail = ({ route, navigation }) => {
               <Text style={styles.trackingHint}>(Klik to copy)</Text>
             </TouchableOpacity>
           )}
+          <Text style={styles.totalText}>Total Keseluruhan: Rp {formatRupiah(transaction.total_pesanan.toString())}</Text>
         </View>
       ) : (
         <Text>No transaction data found.</Text>
@@ -113,10 +116,19 @@ const getStatusColor = (status) => {
 };
 
 const formatRupiah = (number) => {
-  let reverse = number.toString().split('').reverse().join('');
+  // return number
+  // Ensure the input is a string and remove any non-digit characters
+  let numStr = number.toString().replace(/\D/g, '');
+  
+  // Handle empty string case
+  if (numStr === '') return '0';
+
+  // Reverse the string, match groups of 3 digits, and join with dots
+  let reverse = numStr.split('').reverse().join('');
   let ribuan = reverse.match(/\d{1,3}/g);
   return ribuan.join('.').split('').reverse().join('');
 };
+
 
 const styles = StyleSheet.create({
   header: {
@@ -148,10 +160,11 @@ const styles = StyleSheet.create({
   transactionContainer: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: '#FFF',
+    backgroundColor: '#F9F9F9',
     padding: 20,
     borderRadius: 10,
     elevation: 3,
+    marginTop: 10,
   },
   transactionImage: {
     width: 200,
@@ -191,7 +204,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 10,
     padding: 10,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#E0F7FA',
     borderRadius: 5,
   },
   trackingNumber: {
@@ -202,6 +215,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
     marginLeft: 5,
+  },
+  totalText: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#003366',
+    marginTop: 20,
   },
 });
 
