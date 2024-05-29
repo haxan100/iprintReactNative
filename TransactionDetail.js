@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Axios from 'axios';
 import Clipboard from '@react-native-clipboard/clipboard';
+import Toast from 'react-native-simple-toast';
 
 const TransactionDetail = ({ route, navigation }) => {
   const { id_transaksi } = route.params;
@@ -46,8 +47,9 @@ const TransactionDetail = ({ route, navigation }) => {
   }, [id_transaksi]);
 
   const copyToClipboard = (text) => {
+    
     Clipboard.setString(text);
-    Alert.alert('Copied', 'Kode resi has been copied to clipboard.');
+    Toast.show('Kode resi has been copied to clipboard');
   };
 
   if (loading) {
