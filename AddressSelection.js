@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, 
 import Axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 
 const AddressSelection = ({ route, navigation }) => {
   const setSelectedAddress = route.params?.setSelectedAddress;  // Ensure function is correctly accessed
@@ -71,6 +72,31 @@ const AddressSelection = ({ route, navigation }) => {
     );
   };
 
+  const renderRightActions = (id_alamat) => (
+    <TouchableOpacity
+      style={styles.deleteButton}
+      onPress={() => handleDeleteAddress(id_alamat)}
+    >
+      <Text style={styles.deleteButtonText}>Hapus</Text>
+    </TouchableOpacity>
+  );
+
+  const renderItem = ({ item }) => (
+    <Swipeable renderRightActions={() => renderRightActions(item.id_alamat)}>
+      <View style={styles.addressWrapper}>
+        <TouchableOpacity
+          style={styles.addressContainer}
+          onPress={() => {
+            setSelectedAddress({ id: item.id_alamat, nama: `${item.nama_penerima} | +${item.nomor_hp} | ${item.detail}` });
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
+        </TouchableOpacity>
+      </View>
+    </Swipeable>
+  );
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
@@ -80,7 +106,7 @@ const AddressSelection = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
+    <GestureHandlerRootView style={styles.container}>
       <Text style={styles.header}>Pilih Alamat</Text>
       {addresses.length === 0 ? (
         <View style={styles.emptyContainer}>
@@ -89,29 +115,14 @@ const AddressSelection = ({ route, navigation }) => {
       ) : (
         <FlatList
           data={addresses}
-          renderItem={({ item }) => (
-            <View style={styles.addressWrapper}>
-              <TouchableOpacity
-                style={styles.addressContainer}
-                onPress={() => {
-                  setSelectedAddress({ id: item.id_alamat, nama: `${item.nama_penerima} | +${item.nomor_hp} | ${item.detail}` });
-                  navigation.goBack();
-                }}
-              >
-                <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteAddress(item.id_alamat)}>
-                <MaterialCommunityIcons name="trash-can-outline" size={24} color="#D11A2A" />
-              </TouchableOpacity>
-            </View>
-          )}
+          renderItem={renderItem}
           keyExtractor={(item) => item.id_alamat.toString()}
         />
       )}
       <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddAddress', { fetchAddresses })}>
         <Text style={styles.addButtonText}>Tambah Alamat</Text>
       </TouchableOpacity>
-    </View>
+    </GestureHandlerRootView>
   );
 };
 
@@ -130,11 +141,18 @@ const styles = StyleSheet.create({
   },
   addressText: { fontSize: 16, color: '#333' },
   deleteButton: {
-    padding: 8,
-    backgroundColor: '#ff4d',
+    backgroundColor: '#FF3B30',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+    height: '100%',
     borderRadius: 8,
+    marginVertical: 8,
   },
-  deleteIcon: { width: 24, height: 24 },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
   addButton: {
     padding: 16,
     backgroundColor: '#5D3FD3',
