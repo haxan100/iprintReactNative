@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,32 +6,36 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import Axios from 'axios';
 
 const NotificationScreen = ({ navigation }) => {
-  // Dummy data for notifications
-  const [notifications, setNotifications] = useState([
-    {
-      id: '1',
-      title: 'Selesaikan Pembayaran!',
-      details: 'Selesaikan pembayaran No. Pesanan : 22009IJLM9G sebelum 23.59 2 February 2021',
-    },
-    {
-      id: '2',
-      title: 'Pembayaran Berhasil!',
-      details: 'Pembayaran No. Pesanan : 22009IJLM9G telah berhasil kami konfirmasi, pesananmu segera diproses',
-    },
-    {
-      id: '3',
-      title: 'Pembayaran Berhasil!',
-      details: 'Pembayaran No. Pesanan : 22009IJLM9G telah berhasil kami konfirmasi, pesananmu segera diproses',
-    },
-    // ... Add more notifications here
-  ]);
+  const [notifications, setNotifications] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleDelete = (id) => {
+  useEffect(() => {
+    fetchNotifications();
+  }, []);
+
+  const fetchNotifications = async () => {
+    try {
+      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/notifikasi');
+      if (response.data && response.data.status) {
+        setNotifications(response.data.data);
+      } else {
+        Alert.alert('Error', response.data.message || 'Failed to fetch notifications');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch notifications');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
     Alert.alert(
       'Hapus Notifikasi',
       'Apakah Anda yakin ingin menghapus notifikasi ini?',
@@ -42,8 +46,17 @@ const NotificationScreen = ({ navigation }) => {
         },
         {
           text: 'Ya',
-          onPress: () => {
-            setNotifications(notifications.filter(notification => notification.id !== id));
+          onPress: async () => {
+            try {
+              const response = await Axios.delete(`https://heyiamhasan.com/porto/iprintNew/Api/hapusNotifikasi/${id}`);
+              if (response.data && response.data.status) {
+                setNotifications(notifications.filter(notification => notification.id_notif !== id));
+              } else {
+                Alert.alert('Error', response.data.message || 'Failed to delete notification');
+              }
+            } catch (error) {
+              Alert.alert('Error', 'Failed to delete notification');
+            }
           },
         },
       ]
@@ -60,10 +73,11 @@ const NotificationScreen = ({ navigation }) => {
   );
 
   const renderItem = ({ item }) => (
-    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+    <Swipeable renderRightActions={() => renderRightActions(item.id_notif)}>
       <View style={styles.notificationCard}>
-        <Text style={styles.notificationTitle}>{item.title}</Text>
-        <Text style={styles.notificationDetails}>{item.details}</Text>
+        <Text style={styles.notificationTitle}>{item.judul}</Text>
+        <Text style={styles.notificationDetails}>{item.detail}</Text>
+        <Text style={styles.notificationDate}>{item.created_at}</Text>
       </View>
     </Swipeable>
   );
@@ -85,12 +99,16 @@ const NotificationScreen = ({ navigation }) => {
       </View>
 
       {/* Notifications List */}
-      <FlatList
-        data={notifications}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        style={styles.notificationsList}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color="#5D3FD3" />
+      ) : (
+        <FlatList
+          data={notifications}
+          renderItem={renderItem}
+          keyExtractor={item => item.id_notif}
+          style={styles.notificationsList}
+        />
+      )}
     </GestureHandlerRootView>
   );
 };
@@ -158,6 +176,11 @@ const styles = StyleSheet.create({
   notificationDetails: {
     fontSize: 14,
     color: '#333',
+  },
+  notificationDate: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 8,
   },
   deleteButton: {
     backgroundColor: '#FF3B30',

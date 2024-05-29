@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import Axios from 'axios';
+import Toast from 'react-native-simple-toast';
 
 const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
   const { image } = route.params; // Gambar dari halaman sebelumnya
@@ -54,14 +55,12 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
       if (response.data.message === "Harap Login Terlebih Dahulu!") {
         alert('Harap Login Terlebih Dahulu!');
         navigation.navigate('Login');
-      } else {
-        alert(response.data.message);
       }
-
+      
       console.log("==============>>")
       if(response.data.status){
         console.log(response.data)
-        alert('Berhasil menambahkan ke keranjang')
+        Toast.show(response.data.message);
         setTimeout(() => {
           navigation.navigate('Cart');
           
