@@ -11,7 +11,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import Axios from 'axios';
-import { Toast } from 'react-native-alert-notification';
+import Toast from 'react-native-simple-toast';
+
 
 const NotificationScreen = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
@@ -29,11 +30,12 @@ const NotificationScreen = ({ navigation }) => {
       } else {
         if (response.data.message === "Harap Login Terlebih Dahulu!") {
           // alert('Harap Login Terlebih Dahulu!');
-          Toast('Harap Login Terlebih Dahulu')
+          Toast.show('Harap Login Terlebih Dahulu')
           navigation.navigate('Login');
         }
+        Toast.show(response.data.message)
 
-        Alert.alert('Error', response.data.message || 'Failed to fetch notifications');
+        // Alert.alert('Error', response.data.message || 'Failed to fetch notifications');
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to fetch notifications');
@@ -59,7 +61,9 @@ const NotificationScreen = ({ navigation }) => {
               if (response.data && response.data.status) {
                 setNotifications(notifications.filter(notification => notification.id_notif !== id));
               } else {
-                Alert.alert('Error', response.data.message || 'Failed to delete notification');
+                Toast.show(response.data.message)
+
+                // Alert.alert('Error', response.data.message || 'Failed to delete notification');
               }
             } catch (error) {
               Alert.alert('Error', 'Failed to delete notification');
