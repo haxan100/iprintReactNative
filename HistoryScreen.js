@@ -13,6 +13,7 @@ import Axios from 'axios';
 import { formatRupiah } from './utils/currencyUtils';
 import { Picker } from '@react-native-picker/picker';
 import { Toast } from 'react-native-alert-notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -55,6 +56,8 @@ const HistoryScreen = ({ navigation }) => {
           // alert('Harap Login Terlebih Dahulu!');
           Toast('Harap Login Terlebih Dahulu')
           navigation.navigate('Login');
+          await AsyncStorage.removeItem('userData');
+
         }
         console.log('No orders data received:', response.data.message);
       }

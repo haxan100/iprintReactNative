@@ -41,6 +41,8 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
           if (data.message === "Harap Login Terlebih Dahulu!") {
             // alert('Harap Login Terlebih Dahulu!');
             Toast('Harap Login Terlebih Dahulu')
+          await AsyncStorage.removeItem('userData');
+
             navigation.navigate('Login');
           }
 

@@ -1,38 +1,42 @@
 import React, { useEffect, useContext } from 'react';
 import { View, Image, StatusBar, StyleSheet } from 'react-native';
+import Axios from 'axios';
 import { AuthContext } from './AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
-      let isLoggedIn;
       try {
-        // Coba mendapatkan data sesi dari AsyncStorage
-        const userData = await AsyncStorage.getItem('@session_data');
-        isLoggedIn = userData != null; // jika ada data, asumsikan pengguna sudah login
+        // Ambil data sesi dari AsyncStorage
+        const userData = await AsyncStorage.getItem('userData');
+        if (userData) {
+          // Jika ada data sesi, panggil API untuk validasi
+          const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile', {
+            headers: {
+              Authorization: `Bearer ${JSON.parse(userData).token}`,
+            },
+          });
+          const { message, code, status } = response.data;
+          if (status === false && message === 'Harap Login Terlebih Dahulu!') {
+          await AsyncStorage.removeItem('userData');
+
+            navigation.navigate('Login');
+          } else {
+            navigation.navigate('Home');
+          }
+        } else {
+          // Jika tidak ada data sesi, navigasi ke halaman login
+          navigation.navigate('Login');
+        }
       } catch (error) {
-        // Proses error jika terjadi kesalahan
         console.error('Failed to check login status', error);
-        isLoggedIn = false; // jika terjadi error, asumsikan pengguna belum login
+        navigation.navigate('Login');
       }
-      // Navigasi berdasarkan status login
-      navigation.navigate(isLoggedIn ? 'Home' : 'Login');
     };
 
     checkLoginStatus();
   }, [navigation]);
-  
-  const { isAuthenticated } = useContext(AuthContext);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (isAuthenticated) {
-        navigation.replace('Home');
-      } else {
-        navigation.replace('Login');
-      }
-    }, 200); // Pindah halaman setelah 2 detik
-  }, [isAuthenticated, navigation]);
 
   return (
     <View style={styles.container}>
@@ -50,8 +54,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   image: {
-    width: 100, // Atur ukuran sesuai kebutuhan
-    height: 100, // Atur ukuran sesuai kebutuhan
+    width: 100,
+    height: 100,
   },
 });
 
