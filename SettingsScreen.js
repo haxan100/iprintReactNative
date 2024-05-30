@@ -12,7 +12,7 @@ import React, { useState, useEffect } from 'react';
 import Axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Add this line for MaterialCommunityIcons
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/Ionicons'; // Replace with the correct icon library if needed
 import DeviceInfo from 'react-native-device-info';
 
@@ -176,7 +176,9 @@ const SettingsScreen = ({ navigation }) => {
           onPress={() => navigation.navigate('NotificationSettings')} // Make sure the route name matches
 
           />
-        <MenuItem title="Bahasa / Language" iconName="language-outline" />
+        <MenuItem title="Bahasa / Language" iconName="language-outline" 
+        onPress={()=>Toast.show("Fitur Akan Segera Hadir")}
+        />
 
         <MenuItem 
           title="Kebijakan Privasi" 
