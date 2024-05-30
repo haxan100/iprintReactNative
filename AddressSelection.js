@@ -7,15 +7,14 @@ import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler'
 
 const AddressSelection = ({ route, navigation }) => {
   const setSelectedAddress = route.params?.setSelectedAddress;
-  const sourceScreen = route.params?.source;  // Ensure we know which screen accessed this component
+  const sourceScreen = route.params?.source;
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log(sourceScreen)
+
   const fetchAddresses = async () => {
     try {
       const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
       if (response.data && response.data.status) {
-        console.log(response.data.data)
         setAddresses(response.data.data);
       } else {
         console.log('No address data received:', response.data.message);
@@ -74,12 +73,20 @@ console.log(sourceScreen)
   };
 
   const renderRightActions = (id_alamat) => (
-    <TouchableOpacity
-      style={styles.deleteButton}
-      onPress={() => handleDeleteAddress(id_alamat)}
-    >
-      <Text style={styles.deleteButtonText}>Hapus</Text>
-    </TouchableOpacity>
+    <View style={{ flexDirection: 'row' }}>
+      <TouchableOpacity
+        style={styles.editButton}
+        onPress={() => navigation.navigate('EditAddress', { id_alamat })}
+      >
+        <Text style={styles.editButtonText}>Edit</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => handleDeleteAddress(id_alamat)}
+      >
+        <Text style={styles.deleteButtonText}>Hapus</Text>
+      </TouchableOpacity>
+    </View>
   );
 
   const renderItem = ({ item }) => (
@@ -88,12 +95,12 @@ console.log(sourceScreen)
         <TouchableOpacity
           style={styles.addressContainer}
           onPress={() => {
-            if (sourceScreen !== 'SettingScreen') {  // Check if the source is not SettingScreen
+            if (sourceScreen !== 'SettingScreen') {
               setSelectedAddress({ id: item.id_alamat, nama: `${item.nama_penerima} | +${item.nomor_hp} | ${item.detail}` });
               navigation.goBack();
             }
           }}
-          disabled={sourceScreen === 'SettingScreen'}  // Disable button if source is SettingScreen
+          disabled={sourceScreen === 'SettingScreen'}
         >
           <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
         </TouchableOpacity>
@@ -148,12 +155,25 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF3B30',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80,
-    height: '100%',
+    width: 60,
+    height: '80%',
     borderRadius: 8,
     marginVertical: 8,
   },
   deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  editButton: {
+    backgroundColor: '#FFA500',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 60,
+    height: '80%',
+    borderRadius: 8,
+    marginVertical: 8,
+  },
+  editButtonText: {
     color: 'white',
     fontWeight: 'bold',
   },

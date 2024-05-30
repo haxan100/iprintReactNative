@@ -34,6 +34,7 @@ import AddressSelection from './AddressSelection';
 import ShippingSelection from './ShippingSelection';
 import AddAddress from './AddAddress';
 import TransactionDetail from './TransactionDetail';
+import EditAddress from './EditAddress';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -110,6 +111,7 @@ function AppNavigator() {
         <Stack.Screen name="ShippingSelection" component={ShippingSelection} />
         <Stack.Screen name="AddAddress" component={AddAddress} />
         <Stack.Screen name="TransactionDetail" component={TransactionDetail} />
+        <Stack.Screen name="EditAddress" component={EditAddress} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
