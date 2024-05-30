@@ -110,7 +110,7 @@ const HistoryScreen = ({ navigation }) => {
         <TouchableOpacity onPress={() => navigation.goBack()}>
           <Icon name="arrow-left" size={24} color="#000" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Riwayata</Text>
+        <Text style={styles.headerTitle}>Riwayat</Text>
         <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
           <Icon name="cart" size={24} color="#5D3FD3" />
           <View style={styles.notificationBadge}>

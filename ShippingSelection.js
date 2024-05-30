@@ -1,20 +1,11 @@
-import React,{useEffect,useState} from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity,ActivityIndicator  } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
-
-const shippings = [
-  'Regular (2-4 Hari) - JNE Rp 9.000',
-  'Regular (2-4 Hari) - JNT Rp 9.000',
-  'Same Day (Hari yang Sama) - Gojek Rp 19.000',
-  'Same Day (Hari yang Sama) - Grab Rp 22.000',
-  // ... add more shipping options
-];
-
 
 const ShippingSelection = ({ route, navigation }) => {
   const [originDetails, setOriginDetails] = useState(null);
   const [destinationDetails, setDestinationDetails] = useState(null);
-  const { setSelectedShipping, id_alamat, setSelectedShippingongkir} = route.params;
+  const { setSelectedShipping, id_alamat, setSelectedShippingongkir } = route.params;
   const [loading, setLoading] = useState(true);
   const [couriers, setCouriers] = useState([]);
 
@@ -26,31 +17,32 @@ const ShippingSelection = ({ route, navigation }) => {
         const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/cekEkspedisi', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-
-        if (response.data && response.data.data.status.description=="OK") {
+        console.log(response)
+        if (response.data && response.data.data.status.description === "OK") {
           
           setOriginDetails(response.data.data.origin_details);
           setDestinationDetails(response.data.data.destination_details);
-          setCouriers(Object.values(response.data.courier));
+          const filteredCouriers = Object.values(response.data.courier).filter(item => item.costs !== "N/A");
+          setCouriers(filteredCouriers);
 
         } else {
           console.log('No cart data received:', response.data.message);
         }
       } catch (error) {
         console.error('Error fetching cart data:', error);
-      }
-      finally {
+      } finally {
         setLoading(false);
       }
     };
     
     getCartDataById();
   }, []);
+
   if (loading) {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#5D3FD3" />
-        <Text style={styles.locationText}>Tunggu Sesaat, Sedang Kalkulasi Ongkir</Text>
+        <Text style={styles.locationText}>Tunggu Sesaat, Sedang  Ongkir</Text>
       </View>
     );
   }
@@ -59,10 +51,8 @@ const ShippingSelection = ({ route, navigation }) => {
 
   const renderCourierItem = ({ item }) => (
     <TouchableOpacity
-    style={styles.shippingContainer}
-    onPress={() => {
-        console.log(item.costs)
-        console.log(item)
+      style={styles.shippingContainer}
+      onPress={() => {
         setSelectedShipping(item.code);
         setSelectedShippingongkir(item.costs);
         navigation.goBack();
@@ -87,22 +77,6 @@ const ShippingSelection = ({ route, navigation }) => {
         renderItem={renderCourierItem}
         keyExtractor={(item) => item.code}
       />
-
-      {/* <FlatList
-        data={shippings}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.shippingContainer}
-            onPress={() => {
-              setSelectedShipping(item);
-              navigation.goBack();
-            }}
-          >
-            <Text style={styles.shippingText}>{item}</Text>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item, index) => index.toString()}
-      /> */}
 
       <TouchableOpacity style={styles.confirmButton} onPress={() => navigation.goBack()}>
         <Text style={styles.confirmButtonText}>Konfirmasi</Text>
@@ -140,19 +114,6 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   locationText: {
-    fontSize: 16,
-    color: '#333333',
-  },
-  shippingContainer: {
-    padding: 16,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 10,
-    marginBottom: 16,
-    borderColor: '#5D3FD3',
-    borderWidth: 1,
-    elevation: 3,
-  },
-  shippingText: {
     fontSize: 16,
     color: '#333333',
   },
