@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Axios from 'axios';
 import { formatRupiah } from './utils/currencyUtils';
 import { Picker } from '@react-native-picker/picker';
+import { Toast } from 'react-native-alert-notification';
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -50,6 +51,11 @@ const HistoryScreen = ({ navigation }) => {
         console.log(response.data)
         setOrders(response.data.data);
       } else {
+        if (response.data.message === "Harap Login Terlebih Dahulu!") {
+          // alert('Harap Login Terlebih Dahulu!');
+          Toast('Harap Login Terlebih Dahulu')
+          navigation.navigate('Login');
+        }
         console.log('No orders data received:', response.data.message);
       }
     } catch (error) {

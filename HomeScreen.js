@@ -14,6 +14,8 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'; // Make sure to install this package
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
+import { Axios } from 'axios';
+import { Toast } from 'react-native-alert-notification';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
@@ -23,6 +25,41 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   const [blogPosts, setBlogPosts] = useState([]);
   const [MPs, setMPs] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+        console.log("ssssssssssssssssssssssssssssssssssssssssssssssssss")
+        
+        const data = await response.json();
+        console.log(data)
+        console.log("ssssssssssssssssssssssssssssssssssssssssssssssssss")
+        console.log(data.message)
+        if (data && data.status) {   
+          console.log(data)       
+          if (data.message === "Harap Login Terlebih Dahulu!") {
+            // alert('Harap Login Terlebih Dahulu!');
+            Toast('Harap Login Terlebih Dahulu')
+            navigation.navigate('Login');
+          }
+
+        } else {
+          if (data.message === "Harap Login Terlebih Dahulu!") {
+            // alert('Harap Login Terlebih Dahulu!');
+            // Toast('Harap Login Terlebih Dahulu')
+            navigation.navigate('Login');
+          }
+          console.log('Failed to fetch profile:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    getProfile();
+  }, []);
+
 
   useEffect(() => {
     const fetchBlogPosts = async () => {
@@ -39,6 +76,8 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
 
     fetchBlogPosts();
   }, []);
+  
+
 
   useEffect(() => {
     const fetchMPs = async () => {
@@ -46,9 +85,6 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
         const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getMarketplace');
         const data = await response.json();
         setMPs(data.data);
-        console.log("=========================================")
-        console.log(data.data)
-        console.log("=========================================")
       } catch (error) {
         console.error('Error fetching blog posts:', error);
       } finally {

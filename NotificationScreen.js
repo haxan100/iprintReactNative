@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import Axios from 'axios';
+import { Toast } from 'react-native-alert-notification';
 
 const NotificationScreen = ({ navigation }) => {
   const [notifications, setNotifications] = useState([]);
@@ -26,6 +27,12 @@ const NotificationScreen = ({ navigation }) => {
       if (response.data && response.data.status) {
         setNotifications(response.data.data);
       } else {
+        if (response.data.message === "Harap Login Terlebih Dahulu!") {
+          // alert('Harap Login Terlebih Dahulu!');
+          Toast('Harap Login Terlebih Dahulu')
+          navigation.navigate('Login');
+        }
+
         Alert.alert('Error', response.data.message || 'Failed to fetch notifications');
       }
     } catch (error) {
