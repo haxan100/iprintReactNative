@@ -18,6 +18,7 @@ import DeviceInfo from 'react-native-device-info';
 
 const SettingsScreen = ({ navigation }) => {
   const [notificationCount, setNotificationCount] = useState(0); // Assume a state that holds the notification count
+  const [selectedAddress, setSelectedAddress] = useState(null);
 
   const [profile, setProfile] = useState({
     id_user: '',
@@ -157,7 +158,12 @@ const SettingsScreen = ({ navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.menuSection}>
-        <MenuItem title="Alamat Saya" iconName="location-outline" />
+        <MenuItem title="Alamat Saya" iconName="location-outline" 
+        
+
+        onPress={() => navigation.navigate('AddressSelection', { setSelectedAddress, source: 'SettingScreen' })} // Make sure the route name matches
+        
+        />
         <MenuItem 
         title="Ubah Password" 
         iconName="lock-closed-outline" 

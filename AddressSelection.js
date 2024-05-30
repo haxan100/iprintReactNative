@@ -6,10 +6,11 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 
 const AddressSelection = ({ route, navigation }) => {
-  const setSelectedAddress = route.params?.setSelectedAddress;  // Ensure function is correctly accessed
+  const setSelectedAddress = route.params?.setSelectedAddress;
+  const sourceScreen = route.params?.source;  // Ensure we know which screen accessed this component
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
-
+console.log(sourceScreen)
   const fetchAddresses = async () => {
     try {
       const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
@@ -87,9 +88,12 @@ const AddressSelection = ({ route, navigation }) => {
         <TouchableOpacity
           style={styles.addressContainer}
           onPress={() => {
-            setSelectedAddress({ id: item.id_alamat, nama: `${item.nama_penerima} | +${item.nomor_hp} | ${item.detail}` });
-            navigation.goBack();
+            if (sourceScreen !== 'SettingScreen') {  // Check if the source is not SettingScreen
+              setSelectedAddress({ id: item.id_alamat, nama: `${item.nama_penerima} | +${item.nomor_hp} | ${item.detail}` });
+              navigation.goBack();
+            }
           }}
+          disabled={sourceScreen === 'SettingScreen'}  // Disable button if source is SettingScreen
         >
           <Text style={styles.addressText}>{`${item.nama_penerima} | +${item.nomor_hp}\n${item.detail}, ${item.kecamatan}, ${item.kabupaten}, ${item.provinsi}, ${item.kode_pos}`}</Text>
         </TouchableOpacity>

@@ -100,7 +100,12 @@ const CheckoutScreen = ({ navigation, route }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Check Out</Text>
-      <TouchableOpacity style={styles.selectContainer} onPress={() => navigation.navigate('AddressSelection', { setSelectedAddress })}>
+      <TouchableOpacity style={styles.selectContainer} 
+      onPress={() => navigation.navigate('AddressSelection', { setSelectedAddress, source: 'CheckoutScreen' })
+    }
+      // navigation.navigate('AddressSelection', { setSelectedAddress, source: 'CheckoutScreen' });
+
+      >
         <Text style={styles.selectText}>{selectedAddress ? selectedAddress.nama : 'Pilih Alamat'}</Text>
       </TouchableOpacity>
       <FlatList
