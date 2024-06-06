@@ -88,13 +88,14 @@ const HistoryScreen = ({ navigation }) => {
         <Text style={styles.itemTitle}>{item.judul}</Text>
         <Text style={styles.itemInfo}>Kode Transaksi: {item.kode_transaksi}</Text>
         <Text style={[styles.itemStatus, { color: getStatusColor(item.nama_status) }]}>{item.nama_status}</Text>
-        <Text style={styles.itemPrice}>Rp {formatRupiah(item.total_pesanan.toString())}</Text>
-        <TouchableOpacity style={styles.orderButton} onPress={() => {/* Handle order again */}}>
+        <Text style={styles.itemPrice}>{formatRupiah(item.total_pesanan.toString())}</Text>
+        <TouchableOpacity style={styles.orderButton} onPress={() => navigation.navigate('RepeatOrderCheckout', { item })}>
           <Text style={styles.orderButtonText}>Pesan Lagi</Text>
         </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
+  
 
   if (loading) {
     return (
