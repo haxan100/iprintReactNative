@@ -36,6 +36,7 @@ import AddAddress from './AddAddress';
 import TransactionDetail from './TransactionDetail';
 import EditAddress from './EditAddress';
 import RepeatOrderCheckoutScreen from './RepeatOrderCheckoutScreen';
+import CheckoutLiveScreen from './CheckoutLiveScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -114,6 +115,7 @@ function AppNavigator() {
         <Stack.Screen name="TransactionDetail" component={TransactionDetail} />
         <Stack.Screen name="EditAddress" component={EditAddress} />
         <Stack.Screen name="RepeatOrderCheckout" component={RepeatOrderCheckoutScreen} />
+        <Stack.Screen name="CheckoutLive" component={CheckoutLiveScreen} />
         {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>

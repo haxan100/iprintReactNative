@@ -6,27 +6,24 @@ import { CommonActions } from '@react-navigation/native';
 
 const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
   const { image } = route.params; // Gambar dari halaman sebelumnya
-  console.log(image)
+  console.log(image);
   const [lebar, setLebar] = useState('1.5');
   const [panjang, setPanjang] = useState('');
   const [duplikasiMotif, setDuplikasiMotif] = useState(false);
   const [deskripsi, setDeskripsi] = useState('');
   const [loading, setLoading] = useState(false);
-  const [loadingText, setLoadingText] = useState("");
-
-  const handleNext = () => {
-    console.log("Lebar:", lebar);
-    console.log("Panjang:", panjang);
-    console.log("Duplikasi Motif:", duplikasiMotif);
-  };
+  const [loadingText, setLoadingText] = useState('');
 
   const handlePesanSekarang = () => {
-    navigation.navigate('Checkout', { lebar, panjang, duplikasiMotif, deskripsi });
-    console.log("Pesan Sekarang dengan spesifikasix:", { lebar, panjang, duplikasiMotif, deskripsi });
+    if(panjang==0||panjang==null){
+      return alert("Mohon Isi Semua Yang Di Perlukan!")
+    }
+    navigation.navigate('CheckoutLive', { lebar, panjang, duplikasiMotif, deskripsi, image, tipe_kain:1,id_kain:0 });
+    console.log('Pesan Sekarang dengan spesifikasix:', { lebar, panjang, duplikasiMotif, deskripsi });
   };
 
   const handleTambahKeKeranjang = async () => {
-    console.log("tekan tambah ke keranjang");
+    console.log('tekan tambah ke keranjang');
     setLoadingText('Sedang Menambahkan Item Ke Keranjang');
     setLoading(true);
     const formData = new FormData();
@@ -49,7 +46,7 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
 
       console.log(response.data);
 
-      if (response.data.message === "Harap Login Terlebih Dahulu!") {
+      if (response.data.message === 'Harap Login Terlebih Dahulu!') {
         alert('Harap Login Terlebih Dahulu!');
         navigation.navigate('Login');
       }
@@ -61,10 +58,7 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
           navigation.dispatch(
             CommonActions.reset({
               index: 1,
-              routes: [
-                { name: 'Home' },
-                { name: 'Cart' },
-              ],
+              routes: [{ name: 'Home' }, { name: 'Cart' }],
             })
           );
         }, 2000);
@@ -72,9 +66,9 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
         alert(response.data.message);
       }
 
-      console.log("Response from addKeranjang API:", response.data);
+      console.log('Response from addKeranjang API:', response.data);
     } catch (error) {
-      console.error("Error adding to cart:", error);
+      console.error('Error adding to cart:', error);
     } finally {
       setLoading(false);
     }
