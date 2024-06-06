@@ -8,10 +8,6 @@ import { formatRupiah } from './utils/currencyUtils';
 
 const CheckoutLiveScreen = ({ navigation, route }) => {
   const { lebar, panjang, duplikasiMotif, deskripsi, image, tipe_kain, id_kain } = route.params;
-  console.log("------------------");
-  console.log(route.params);
-  console.log("------------------");
-
   const [cartData, setCartData] = useState([
     {
       id_keranjang: 1, // Ensure this is set

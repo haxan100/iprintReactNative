@@ -22,8 +22,12 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
     console.log("Duplikasi Motif:", duplikasiMotif);
   };
 
-  const handlePesanSekarang = () => {
-    navigation.navigate('Checkout', { lebar, panjang, duplikasiMotif, deskripsi });
+  const handlePesanSekarang = () => {    
+    if(panjang==0||panjang==null){
+      return alert("Mohon Isi Semua Yang Di Perlukan!")
+    }
+
+    navigation.navigate('CheckoutLive', { lebar, panjang, duplikasiMotif, deskripsi,image, tipe_kain:2,id_kain:selectedFabric });
     console.log("Pesan Sekarang dengan spesifikasix:", { lebar, panjang, duplikasiMotif, deskripsi });
   };
 
