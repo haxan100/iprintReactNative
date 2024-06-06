@@ -14,10 +14,13 @@ const ShippingSelection = ({ route, navigation }) => {
       try {
         const formData = new FormData();
         formData.append('id_alamat', id_alamat);
+        
         const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/cekEkspedisi', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        console.log(response)
+        console.log("====================")
+        console.log(response.data)
+        console.log("====================")
         if (response.data && response.data.data.status.description === "OK") {
           
           setOriginDetails(response.data.data.origin_details);
@@ -67,8 +70,8 @@ const ShippingSelection = ({ route, navigation }) => {
       <Text style={styles.header}>Pilih Expedisi</Text>
       {originDetails && destinationDetails && (
         <View style={styles.locationContainer}>
-          <Text style={styles.locationText}>Origin: {`${originDetails.city_name}, ${originDetails.province}`}</Text>
-          <Text style={styles.locationText}>Destination: {`${destinationDetails.city_name}, ${destinationDetails.province}`}</Text>
+          <Text style={styles.locationText}>Origin: {`${originDetails.city}, ${originDetails.province}`}</Text>
+          <Text style={styles.locationText}>Destination: {`${destinationDetails.city}, ${destinationDetails.province}`}</Text>
         </View>
       )}
       

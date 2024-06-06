@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert, TextInput } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, Image, Alert, TextInput, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from './utils/Api';
@@ -15,6 +15,7 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [selectedShippingongkir, setSelectedShippingongkir] = useState(0);
   const [note, setNote] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getCartDataById = async () => {
@@ -56,16 +57,18 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
 
     const item = cartData[0];
 
+    setIsLoading(true); // Menyalakan loading
+
     try {
       const formData = new FormData();
-      formData.append('id_keranjang', item.id_keranjang);
+      formData.append('id_transaksi', item.id_transaksi);
       formData.append('expedisi', selectedShipping);
       formData.append('ongkir', selectedShippingongkir); // Example value, update as needed
       formData.append('metode_pembayaran', 1); // Example value, update as needed
       formData.append('id_alamat', selectedAddress.id);
       console.log(formData);
 
-      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiFromCart', formData, {
+      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiLastTransaction', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -74,7 +77,7 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
       if (response.data.status) {
         Alert.alert('Success', 'Transaction created successfully');
         setTimeout(() => {
-          navigation.navigate('Beranda')
+          navigation.navigate('Beranda');
         }, 1500);
       } else {
         console.log("Failed response data:", response.data);
@@ -86,6 +89,8 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
         console.error("Server responded with:", error.response.data);
       }
       Alert.alert('Error', 'An error occurred while creating the transaction');
+    } finally {
+      setIsLoading(false); // Mematikan loading
     }
   };
 
@@ -136,6 +141,12 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
       <TouchableOpacity style={styles.paymentButton} onPress={handlePayment}>
         <Text style={styles.paymentButtonText}>Pembayaran</Text>
       </TouchableOpacity>
+      {isLoading && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#ffffff" />
+          <Text style={styles.loadingText}>Processing...</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -195,6 +206,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   paymentButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    color: '#ffffff',
+    marginTop: 10,
+    fontSize: 16,
+  },
 });
 
 export default RepeatOrderCheckoutScreen;
