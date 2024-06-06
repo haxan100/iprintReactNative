@@ -1,12 +1,12 @@
-// import { Axios } from 'axios';
-import React, { useState,useEffect } from 'react';
-import { View, Text, TextInput, StyleSheet, Switch, TouchableOpacity,ActivityIndicator  } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
+import { CommonActions } from '@react-navigation/native';
 
 const PrintCutLanjutanScreen = ({ navigation, route }) => {
   const { image } = route.params; // Gambar dari halaman sebelumnya
-  console.log(image)
+  console.log(image);
   const [duplikasiMotif, setDuplikasiMotif] = useState(false);
   const [lebar, setLebar] = useState('1.5');
   const [panjang, setPanjang] = useState('');
@@ -14,19 +14,17 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
   const [selectedFabric, setSelectedFabric] = useState();
   const [fabrics, setFabrics] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
 
   const handleNext = () => {
-    // Handle the next button press
     console.log("Lebar:", lebar);
     console.log("Panjang:", panjang);
     console.log("Duplikasi Motif:", duplikasiMotif);
-    // Here you can do something with the values, like navigating to another screen or making an API call
   };
+
   const handlePesanSekarang = () => {
-    // Handle pesan sekarang action
-    navigation.navigate('Checkout',{ lebar, panjang, duplikasiMotif, deskripsi });    
+    navigation.navigate('Checkout', { lebar, panjang, duplikasiMotif, deskripsi });
     console.log("Pesan Sekarang dengan spesifikasix:", { lebar, panjang, duplikasiMotif, deskripsi });
-    // Implementasi fungsi pesan sekarang
   };
 
   useEffect(() => {
@@ -42,11 +40,9 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
         setLoading(false);
       });
   }, []);
-  if (loading) {
-    console.log("LOADINGGGGG")
-    return <ActivityIndicator size="large" color="#0000ff" />;
-  }
+
   const handleTambahKeKeranjang = async () => {
+    setIsAdding(true);
     const formData = new FormData();
     formData.append('tipe_kain', '2');
     formData.append('id_kain', selectedFabric);
@@ -54,34 +50,44 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
     formData.append('catatan', deskripsi);
     formData.append('gambar', {
       uri: image,
-      type: 'image/jpeg', // atau tipe file yang sesuai
-      name: 'gambar.jpg', // atau nama file yang sesuai
+      type: 'image/jpeg',
+      name: 'gambar.jpg',
     });
     try {
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/addKeranjang', // Ganti dengan URL yang sesuai
+        url: 'https://heyiamhasan.com/porto/iprintNew/Api/addKeranjang',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      console.log("====cut Lnajutan========")
-      console.log(response.data)
-      console.log("==============")
-      if(response.data.status){
-        console.log(response.data)
-        alert('Berhasil menambahkan ke keranjang')
+
+      console.log("====cut Lanjutan========");
+      console.log(response.data);
+      console.log("==============");
+
+      if (response.data.status) {
+        console.log(response.data);
+        alert('Berhasil menambahkan ke keranjang');
         setTimeout(() => {
-          navigation.navigate('Cart');
-          
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 1,
+              routes: [
+                { name: 'Home' },
+                { name: 'Cart' },
+              ],
+            })
+          );
         }, 2000);
-      }else{
-        alert(response.data.message )
-      }  
+      } else {
+        alert(response.data.message);
+      }
+
       console.log("Response from addKeranjang API:", response.data);
-      // Handle response sesuai dengan hasil yang diperoleh
     } catch (error) {
       console.error("Error adding to cart:", error);
-      // Handle error
+    } finally {
+      setIsAdding(false);
     }
   };
 
@@ -94,7 +100,6 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
         <ActivityIndicator size="large" color="#6200EE" />
       ) : (
         <View style={styles.pickerContainer}>
-
           <Picker
             selectedValue={selectedFabric}
             onValueChange={(itemValue) => setSelectedFabric(itemValue)}
@@ -140,9 +145,16 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
         <Text style={styles.buttonText}>Pesan Sekarang</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={handleTambahKeKeranjang}>
-        <Text style={styles.buttonText}>Tambahkan ke Keranjang</Text>
+      <TouchableOpacity style={styles.button} onPress={handleTambahKeKeranjang} disabled={isAdding}>
+        <Text style={styles.buttonText}>{isAdding ? 'Menambahkan...' : 'Tambahkan ke Keranjang'}</Text>
       </TouchableOpacity>
+
+      {isAdding && (
+        <View style={styles.loadingOverlay}>
+          <ActivityIndicator size="large" color="#ffffff" />
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      )}
     </View>
   );
 };
@@ -158,7 +170,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderColor: '#6200EE',
     marginBottom: 20,
-    overflow: 'hidden', // Add this to make the borderRadius work on Android
+    overflow: 'hidden',
   },
   picker: {
     height: 50,
@@ -173,7 +185,7 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     color: '#000000',
-    textAlignVertical: 'top', // Ensure top align for Android
+    textAlignVertical: 'top',
   },
   headerTop: {
     textAlign: 'center',
@@ -192,9 +204,8 @@ const styles = StyleSheet.create({
     color: '#000000',
   },
   input: {
-    // Gaya untuk TextInput
     borderWidth: 1,
-    borderColor: '#6200EE', // Warna border
+    borderColor: '#6200EE',
     borderRadius: 5,
     marginBottom: 20,
     padding: 10,
@@ -208,25 +219,37 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    // Gaya untuk Tombol
-    backgroundColor: '#6200EE', // Warna background untuk tombol
-  padding: 15,
-  borderRadius: 5,
-  alignItems: 'center', // Menyelaraskan item-item secara vertikal di tengah
-  justifyContent: 'center', // Menyelaraskan item-item secara horizontal di tengah
-  marginTop: 20, // Tambahkan jarak di atas
-  marginBottom: 20, // Tambahkan jarak di bawah
+    backgroundColor: '#6200EE',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    marginBottom: 20,
   },
   buttonText: {
-    // Gaya untuk teks dalam Tombol
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center', // Menyelaraskan teks
+    textAlign: 'center',
   },
   buttonIcon: {
-    // Gaya untuk ikon dalam Tombol, jika ada
-    color: 'white', // Warna ikon
+    color: 'white',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  loadingText: {
+    color: 'white',
+    marginTop: 10,
+    fontSize: 16,
   },
 });
 
