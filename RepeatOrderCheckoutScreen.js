@@ -16,6 +16,33 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
   const [selectedShippingongkir, setSelectedShippingongkir] = useState(0);
   const [note, setNote] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [adminFee, setAdminFee] = useState('');
+
+  useEffect(()=>{
+    const getAdminFee = async () => { 
+      try {
+        const response = await Axios({
+          method: 'get',
+          url: `https://heyiamhasan.com/porto/iprintNew/Api/getAdminFee`,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log("dddd");
+        console.log(response.data);
+        console.log("ooooooodooo");
+        if (response.data && response.data.status) {
+          // setCartData([newData]);
+          const value = response.data.data[0].value;
+          console.log("value+",value)
+          setAdminFee(value);
+        } else {
+          console.log('No cart data received:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching cart data:', error);
+      }
+    }
+    getAdminFee();
+  },[])
 
   useEffect(() => {
     const getCartDataById = async () => {
@@ -29,9 +56,9 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
           url: `https://heyiamhasan.com/porto/iprintNew/Api/getTransaksiById`,
           headers: { 'Content-Type': 'multipart/form-data' },
         });
-        console.log("oooooooooooooooooo");
+        console.log("xxxxxxx");
         console.log(response.data);
-        console.log("oooooooooooooooooo");
+        console.log("aaaaaaa");
         if (response.data && response.data.status) {
           setCartData([response.data.data]); // Menggunakan array untuk setCartData
         } else {
@@ -117,19 +144,23 @@ const RepeatOrderCheckoutScreen = ({ navigation, route }) => {
           <View style={styles.itemContainer}>
             <Image source={{ uri: item.gambar }} style={styles.itemImage} />
             <View style={styles.itemDetail}>
-              <Text style={styles.itemTitle}>{item.judul}</Text>
+              <Text style={styles.itemTitle}>{item.judul} - {item.panjang} M</Text>
               <Text style={styles.itemPrice}>{formatRupiah(item.total.toString())}</Text>
             </View>
           </View>
         )}
         keyExtractor={(item) => item.id_transaksi.toString()}
       />
+       <View style={styles.feeContainer}>
+        <Text style={styles.feeText}>Biaya Admin: {formatRupiah(adminFee)}</Text>
+      </View>
+      
       <TouchableOpacity style={styles.selectContainer} onPress={handleSelectShipping}>
         <Text style={styles.selectText}>{selectedShipping ? `${selectedShipping} - ${formatRupiah(selectedShippingongkir.toString())}` : 'Pilih Expedisi'}</Text>
       </TouchableOpacity>
       <View style={styles.totalContainer}>
         <Text style={styles.totalText}>
-          Grand Total: {formatRupiah(cartData.reduce((total, item) => total + parseFloat(item.total) + parseFloat(selectedShippingongkir), 0).toString())}
+          Grand Total: {formatRupiah(cartData.reduce((total, item) => total + parseFloat(item.total) + parseFloat(selectedShippingongkir) +parseFloat(adminFee), 0).toString())}
         </Text>
       </View>
       <TextInput
@@ -221,6 +252,18 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
   },
+  
+  feeContainer: {
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  feeText: { fontSize: 18, color: '#333' },
 });
 
 export default RepeatOrderCheckoutScreen;

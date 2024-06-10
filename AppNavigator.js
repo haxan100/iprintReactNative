@@ -57,14 +57,12 @@ function HomeTabs() {
           } else if (route.name === 'Pengaturan') {
             iconName = focused ? 'cog' : 'cog-outline'; // Menggunakan 'cog' sebagai alternatif untuk settings
           }
-          // You can return any component that you like here!
           return <Icon name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'purple',
         tabBarInactiveTintColor: 'gray',
         tabBarShowLabel: false, // Set to false to hide labels
         tabBarStyle: {
-          // Your custom style
           height: 60, // Example height, adjust as needed
           paddingBottom: 5, // Adjust padding as needed
         },
@@ -116,7 +114,6 @@ function AppNavigator() {
         <Stack.Screen name="EditAddress" component={EditAddress} />
         <Stack.Screen name="RepeatOrderCheckout" component={RepeatOrderCheckoutScreen} />
         <Stack.Screen name="CheckoutLive" component={CheckoutLiveScreen} />
-        {/* Tidak perlu menambahkan Profile dan Info lagi di sini */}
       </Stack.Navigator>
     </NavigationContainer>
   );

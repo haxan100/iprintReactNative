@@ -45,7 +45,7 @@ const ShippingSelection = ({ route, navigation }) => {
     return (
       <View style={styles.loaderContainer}>
         <ActivityIndicator size="large" color="#5D3FD3" />
-        <Text style={styles.locationText}>Tunggu Sesaat, Sedang  Ongkir</Text>
+        <Text style={styles.locationText}>Tunggu Sesaat</Text>
       </View>
     );
   }

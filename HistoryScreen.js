@@ -14,6 +14,7 @@ import { formatRupiah } from './utils/currencyUtils';
 import { Picker } from '@react-native-picker/picker';
 import { Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -41,10 +42,7 @@ const HistoryScreen = ({ navigation }) => {
       const formData = new FormData();
       formData.append('status', status);
 
-      const response = await Axios({
-        method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/ListRiwayatTransaksi',
-        data: formData,
+      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/ListRiwayatTransaksi', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -53,11 +51,13 @@ const HistoryScreen = ({ navigation }) => {
         setOrders(response.data.data);
       } else {
         if (response.data.message === "Harap Login Terlebih Dahulu!") {
-          // alert('Harap Login Terlebih Dahulu!');
-          Toast('Harap Login Terlebih Dahulu')
-          navigation.navigate('Login');
+          Toast.show({
+            type: 'danger',
+            title: 'Error',
+            textBody: 'Harap Login Terlebih Dahulu!',
+          });
           await AsyncStorage.removeItem('userData');
-
+          navigation.navigate('Login');
         }
         console.log('No orders data received:', response.data.message);
       }
@@ -68,10 +68,12 @@ const HistoryScreen = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    fetchOrders(status);
-    setLoading(false); // Set loading to false after initial fetch
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchOrders(status);
+      setLoading(false); // Set loading to false after initial fetch
+    }, [status])
+  );
 
   useEffect(() => {
     setDataLoading(true);
@@ -95,7 +97,6 @@ const HistoryScreen = ({ navigation }) => {
       </View>
     </TouchableOpacity>
   );
-  
 
   if (loading) {
     return (

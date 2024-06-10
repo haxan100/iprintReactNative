@@ -15,6 +15,33 @@ const CheckoutScreen = ({ navigation, route }) => {
   const [selectedShipping, setSelectedShipping] = useState(null);
   const [selectedShippingongkir, setSelectedShippingongkir] = useState(null);
   const [note, setNote] = useState('');
+  const [adminFee, setAdminFee] = useState('');
+
+  useEffect(()=>{
+    const getAdminFee = async () => { 
+      try {
+        const response = await Axios({
+          method: 'get',
+          url: `https://heyiamhasan.com/porto/iprintNew/Api/getAdminFee`,
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log("dddd");
+        console.log(response.data);
+        console.log("ooooooodooo");
+        if (response.data && response.data.status) {
+          // setCartData([newData]);
+          const value = response.data.data[0].value;
+          console.log("value+",value)
+          setAdminFee(value);
+        } else {
+          console.log('No cart data received:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching cart data:', error);
+      }
+    }
+    getAdminFee();
+  },[])
 
   useEffect(() => {
     const getCartDataById = async () => {
@@ -114,18 +141,21 @@ const CheckoutScreen = ({ navigation, route }) => {
           <View style={styles.itemContainer}>
             <Image source={{ uri: item.gambar }} style={styles.itemImage} />
             <View style={styles.itemDetail}>
-              <Text style={styles.itemTitle}>{item.judul}</Text>
-              <Text style={styles.itemPrice}>Rp {item.harga_total}</Text>
+              <Text style={styles.itemTitle}>{item.judul} - {item.panjang} M</Text>
+              <Text style={styles.itemPrice}>Rp {formatRupiah(item.harga_total)}</Text>
             </View>
           </View>
         )}
         keyExtractor={(item) => item.id_keranjang.toString()}
       />
+       <View style={styles.feeContainer}>
+        <Text style={styles.feeText}>Biaya Admin: {formatRupiah(adminFee)}</Text>
+      </View>
       <TouchableOpacity style={styles.selectContainer} onPress={handleSelectShipping}>
         <Text style={styles.selectText}>{selectedShipping ? selectedShipping +" -  " + formatRupiah(selectedShippingongkir) : 'Pilih Expedisi'}</Text>
       </TouchableOpacity>
       <View style={styles.totalContainer}>
-        <Text style={styles.totalText}>Grand Total: Rp {cartData.reduce((total, item) => total + parseFloat(item.harga_total)+selectedShippingongkir, 0)}</Text>
+        <Text style={styles.totalText}>Grand Total : {formatRupiah(cartData.reduce((total, item) => total + parseFloat(item.harga_total)+selectedShippingongkir +parseFloat(adminFee), 0))}</Text>
       </View>
       <TextInput
         style={styles.noteInput}
@@ -194,7 +224,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  paymentButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },
+  paymentButtonText: { color: '#fff', fontSize: 16, fontWeight: 'bold' },  
+  feeContainer: {
+    padding: 16,
+    backgroundColor: '#ffffff',
+    borderRadius: 8,
+    marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  feeText: { fontSize: 18, color: '#333' },
 });
 
 export default CheckoutScreen;

@@ -1,5 +1,5 @@
 // currencyUtils.js
-const formatRupiah = (number, prefix = 'Rp') => {
+const formatRupiah = (number, prefix = 'Rp ') => {
   const numberString = number.toString();
   const split = numberString.split('.');
   const sisa = split[0].length % 3;
