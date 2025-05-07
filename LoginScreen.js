@@ -18,6 +18,8 @@ import CustomAlert from './utils/CustomAlert';
 import Axios from 'axios';
 import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import BASE_URL from './config';
+import { ActivityIndicator } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   useEffect(() => {
@@ -40,6 +42,7 @@ const LoginScreen = ({ navigation }) => {
   const [eyeIcon, setEyeIcon] = useState('eye-slash');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = () => {
     navigation.navigate('Register');
@@ -50,8 +53,11 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
+    setIsLoading(true); // ⏳ mulai loading
     if (!email || !password) {
       CustomAlert.showAlert('Login Gagal', 'HARUS DI ISI SEMUA');
+      setIsLoading(false); // ✅ stop loading
+
       return;
     }
 
@@ -62,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/loginbyEmail',
+        url: BASE_URL + 'loginbyEmail',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -79,7 +85,10 @@ const LoginScreen = ({ navigation }) => {
       }
     } catch (error) {
       CustomAlert.showAlert('Login Gagal', `Gagal ${error.message}`);
+    }finally {
+      setIsLoading(false); // ✅ stop loading
     }
+  
   };
 
   const togglePasswordVisibility = () => {
@@ -93,7 +102,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Image
           source={{
-            uri: 'https://www.iprint.id/wp-content/uploads/2023/05/logo-iprint-blue.png',
+            uri: BASE_URL.IPRINT ,
           }}
           style={styles.logo}
         />
@@ -120,9 +129,15 @@ const LoginScreen = ({ navigation }) => {
             <FontAwesome name={eyeIcon} size={20} color="#BDBDBD" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Log in</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={isLoading}>
+        {
+          isLoading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.loginButtonText}>Log in</Text>
+          )
+        }
+      </TouchableOpacity>
         <TouchableOpacity style={styles.signUp} onPress={handleLupaPassword}>
           <Text style={styles.forgotPassword}>Lupa password?</Text>
         </TouchableOpacity>
