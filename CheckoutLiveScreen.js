@@ -151,6 +151,8 @@ const CheckoutLiveScreen = ({ navigation, route }) => {
       Alert.alert('Mohon pilih alamat terlebih dahulu');
       return;
     }
+    console.log("xxxxxxx");
+    console.log(selectedAddress);
     navigation.navigate('ShippingSelection', { setSelectedShipping, id_alamat: selectedAddress.id, setSelectedShippingongkir });
   };
 

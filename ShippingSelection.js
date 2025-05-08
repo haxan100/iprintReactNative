@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
+import BASE_URL from './config';
 
 const ShippingSelection = ({ route, navigation }) => {
   const [originDetails, setOriginDetails] = useState(null);
