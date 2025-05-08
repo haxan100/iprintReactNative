@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Axios from 'axios';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Toast from 'react-native-simple-toast';
+import BASE_URL from './config';
 
 const TransactionDetail = ({ route, navigation }) => {
   const { id_transaksi } = route.params;
