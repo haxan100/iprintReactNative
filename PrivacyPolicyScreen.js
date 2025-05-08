@@ -12,6 +12,7 @@ import {
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons'; // Ensure you have this package installed
 import RenderHtml from 'react-native-render-html';
+import BASE_URL from './config';
 
 const PrivacyPolicyScreen = ({onBackPress, navigation}) => {
   const [privacyPolicy, setPrivacyPolicy] = useState('');
@@ -21,7 +22,7 @@ const PrivacyPolicyScreen = ({onBackPress, navigation}) => {
     const fetchPrivacyPolicy = async () => {
       try {
         const response = await Axios.get(
-          'https://heyiamhasan.com/porto/iprintNew/Api/kebijakan',
+          BASE_URL.BASE_URL+'kebijakan',
         );
         console.log(response.data.data.isi);
         if (response.data.status) {

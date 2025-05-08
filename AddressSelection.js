@@ -4,6 +4,7 @@ import Axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
+import BASE_URL from './config';
 
 const AddressSelection = ({ route, navigation }) => {
   const setSelectedAddress = route.params?.setSelectedAddress;
@@ -13,7 +14,7 @@ const AddressSelection = ({ route, navigation }) => {
 
   const fetchAddresses = async () => {
     try {
-      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/listAlamat');
+      const response = await Axios.get(BASE_URL.BASE_URL+'listAlamat');
       if (response.data && response.data.status) {
         setAddresses(response.data.data);
       } else {
@@ -51,7 +52,7 @@ const AddressSelection = ({ route, navigation }) => {
 
               const response = await Axios({
                 method: 'post',
-                url: 'https://heyiamhasan.com/porto/iprintNew/Api/hapusAlamat',
+                url: BASE_URL.BASE_URL+'hapusAlamat',
                 data: formData,
                 headers: { 'Content-Type': 'multipart/form-data' },
               });

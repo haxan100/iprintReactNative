@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-simple-toast';
 import Icon from 'react-native-vector-icons/Ionicons'; // Replace with the correct icon library if needed
 import DeviceInfo from 'react-native-device-info';
+import BASE_URL from './config';
 
 const SettingsScreen = ({ navigation }) => {
   const [notificationCount, setNotificationCount] = useState(0); // Assume a state that holds the notification count
@@ -40,7 +41,7 @@ const SettingsScreen = ({ navigation }) => {
   };
   const fetchProfile = async (userId) => {
     try {
-      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+      const response = await Axios.get(BASE_URL.BASE_URL+'getFotoProfile');
       if (response.data && response.data.status) {
         setProfile(response.data.data);
       } else {
@@ -66,7 +67,7 @@ const SettingsScreen = ({ navigation }) => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+        const response = await Axios.get(BASE_URL.BASE_URL+'getFotoProfile');
         console.log(response)
         if (response.data && response.data.status) {
           setProfile(response.data.data);

@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { Axios } from 'axios';
 import { Toast } from 'react-native-alert-notification';
+import API from './config';
 
 const {width: viewportWidth} = Dimensions.get('window');
 
@@ -29,7 +30,7 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   useEffect(() => {
     const getProfile = async () => {
       try {
-        const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+        const response = await fetch(API.BASE_URL+'getFotoProfile');
         console.log("ssssssssssssssssssssssssssssssssssssssssssssssssss")
         
         const data = await response.json();
@@ -66,7 +67,7 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   useEffect(() => {
     const fetchBlogPosts = async () => {
       try {
-        const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getBlog');
+        const response = await fetch(API.BASE_URL+'getBlog');
         const data = await response.json();
         setBlogPosts(data.data);
       } catch (error) {
@@ -84,7 +85,7 @@ const HomeScreen = ({navigation,route, notificationCount}) => {
   useEffect(() => {
     const fetchMPs = async () => {
       try {
-        const response = await fetch('https://heyiamhasan.com/porto/iprintNew/Api/getMarketplace');
+        const response = await fetch(API.BASE_URL+'getMarketplace');
         const data = await response.json();
         setMPs(data.data);
       } catch (error) {

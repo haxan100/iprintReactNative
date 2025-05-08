@@ -3,6 +3,7 @@ import { ScrollView, Text, ActivityIndicator, StyleSheet, View,TouchableOpacity,
 import Axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons'; // Ensure you have this package installed
 import RenderHtml from 'react-native-render-html';
+import BASE_URL from './config';
 
 const PrivacyPolicyScreen = ({ onBackPress,navigation  }) => {
   const [privacyPolicy, setPrivacyPolicy] = useState('');
@@ -11,7 +12,7 @@ const PrivacyPolicyScreen = ({ onBackPress,navigation  }) => {
   useEffect(() => {
     const fetchPrivacyPolicy = async () => {
       try {
-        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/tentang');
+        const response = await Axios.get(BASE_URL.BASE_URL+'tentang');
         console.log(response.data.data.isi)
         if (response.data.status) {
           setPrivacyPolicy(response.data.data.isi); // Assume the policy text is in response.data.data

@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import Axios from 'axios';
 import Toast from 'react-native-simple-toast';
+import BASE_URL from './config';
 
 
 const NotificationScreen = ({ navigation }) => {
@@ -24,7 +25,7 @@ const NotificationScreen = ({ navigation }) => {
 
   const fetchNotifications = async () => {
     try {
-      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/notifikasi');
+      const response = await Axios.get(BASE_URL.BASE_URL+'notifikasi');
       if (response.data && response.data.status) {
         setNotifications(response.data.data);
       } else {

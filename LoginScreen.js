@@ -65,15 +65,15 @@ const LoginScreen = ({ navigation }) => {
       const formData = new FormData();
       formData.append('email', email);
       formData.append('password', password);
-
       const response = await Axios({
         method: 'post',
-        url: BASE_URL + 'loginbyEmail',
+        url: BASE_URL.BASE_URL + 'loginbyEmail',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-
+      console.log("responseeeee");
       console.log(response.data);
+      console.log("responseeeee");
       if (response.data.status) {
         CustomAlert.showAlert('Login Berhasil', `Selamat Datang! ${response.data.data.nama_user}`);
 

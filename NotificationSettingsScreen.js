@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Switch, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Ensure this package is installed
 import FormData from 'form-data';
 import Axios from 'axios';
+import BASE_URL from './config';
 
 const NotificationSettingsScreen = ({ navigation }) => {
   const [whatsAppNotifications, setWhatsAppNotifications] = useState(true);
@@ -14,7 +15,7 @@ const NotificationSettingsScreen = ({ navigation }) => {
       const formData = new FormData();
       formData.append('notif_wa', status ? 'on' : 'off');
 
-      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/changeNotifWA', formData);
+      const response = await Axios.get(BASE_URL.BASE_URL+'changeNotifWA', formData);
       console.log(response.data.data);
 
       if (response.data.status && response.data.data) {

@@ -14,6 +14,7 @@ import Axios from 'axios'; // Make sure Axios is installed and imported
 import ImagePicker from 'react-native-image-picker';
 import { launchImageLibrary } from 'react-native-image-picker';
 import FormData from 'form-data';
+import BASE_URL from './config';
 
 const EditProfileScreen = ({ navigation }) => {
   const [profile, setProfile] = useState({
@@ -66,7 +67,7 @@ const EditProfileScreen = ({ navigation }) => {
     
         console.log('FormData:', formData);
     
-        const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/updateProfile', formData, {
+        const response = await Axios.post(BASE_URL.BASE_URL+'updateProfile', formData, {
           headers: {
             // Add any headers required by your API
             'Content-Type': 'multipart/form-data',
@@ -98,7 +99,7 @@ const EditProfileScreen = ({ navigation }) => {
           console.log("FormData prepared for upload: ", formData);
   
           const response = await Axios.post(
-              'https://heyiamhasan.com/porto/iprintNew/Api/updateFotoProfile',
+              BASE_URL.BASE_URL+'updateFotoProfile',
               formData,
               { headers: { 'Content-Type': 'multipart/form-data' } } // This line is often unnecessary, but included here just in case your server needs it.
           );
@@ -128,7 +129,7 @@ const EditProfileScreen = ({ navigation }) => {
 
   const fetchProfileData = async () => {
     try {
-      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile');
+      const response = await Axios.get(BASE_URL.BASE_URL+'getFotoProfile');
       if (response.data.status) {
         console.log(response.data.data)
         setProfile(response.data.data);

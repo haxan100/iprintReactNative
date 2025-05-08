@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from './utils/Api';
 import FormData from 'form-data';
 import { formatRupiah } from './utils/currencyUtils';
+import BASE_URL from './config';
 
 const CheckoutScreen = ({ navigation, route }) => {
   const { item } = route.params;
@@ -22,7 +23,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       try {
         const response = await Axios({
           method: 'get',
-          url: `https://heyiamhasan.com/porto/iprintNew/Api/getAdminFee`,
+          url: BASE_URL.BASE_URL+`/getAdminFee`,
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log("dddd");
@@ -48,7 +49,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       try {
         const response = await Axios({
           method: 'get',
-          url: `https://heyiamhasan.com/porto/iprintNew/Api/getKeranjangById/${id_keranjang}`,
+          url: BASE_URL.BASE_URL+`/getKeranjangById/${id_keranjang}`,
           headers: { 'Content-Type': 'application/json' },
         });
         console.log("oooooooooooooooooo")
@@ -88,7 +89,7 @@ const CheckoutScreen = ({ navigation, route }) => {
       formData.append('id_alamat', selectedAddress.id);
       console.log(formData);
 
-      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksiFromCart', formData, {
+      const response = await Axios.post(BASE_URL.BASE_URL+'/CreateTransaksiFromCart', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
