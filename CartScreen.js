@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from './utils/Api';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
 import BASE_URL from './config';
+import { Toast } from 'react-native-alert-notification';
 
 const CartScreen = ({ navigation }) => {
   const [cartData, setCartData] = useState([]);
@@ -79,7 +80,8 @@ const CartScreen = ({ navigation }) => {
       });
 
       if (response.data.status) {
-        Alert.alert('Sukses', 'Keranjang berhasil dihapus.');
+        Toast.show('Keranjang berhasil dihapus');
+        // Alert.alert('Sukses', 'Keranjang berhasil dihapus.');
         setCartData(prevCartData => prevCartData.filter(item => item.id_keranjang !== idKeranjang));
       } else {
         Alert.alert('Gagal', 'Tidak dapat menghapus keranjang.');
