@@ -39,7 +39,8 @@ const NotificationScreen = ({ navigation }) => {
         // Alert.alert('Error', response.data.message || 'Failed to fetch notifications');
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to fetch notifications');
+      console.log(error);
+      Alert.alert('Error', 'Failed to fetch notificsations');
     } finally {
       setLoading(false);
     }
@@ -58,7 +59,7 @@ const NotificationScreen = ({ navigation }) => {
           text: 'Ya',
           onPress: async () => {
             try {
-              const response = await Axios.delete(`https://heyiamhasan.com/porto/iprintNew/Api/hapusNotifikasi/${id}`);
+              const response = await Axios.delete(BASE_URL.BASE_URL+`hapusNotifikasi/${id}`);
               if (response.data && response.data.status) {
                 setNotifications(notifications.filter(notification => notification.id_notif !== id));
               } else {

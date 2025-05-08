@@ -20,7 +20,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
     
         // Mengirim permintaan ke endpoint API
         const response = await Axios.post(
-          'https://heyiamhasan.com/porto/iprintNew/api/lupa_password',
+          BASE_URL.BASE_URL+'lupa_password',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );

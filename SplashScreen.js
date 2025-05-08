@@ -12,7 +12,7 @@ const SplashScreen = ({ navigation }) => {
         const userData = await AsyncStorage.getItem('userData');
         if (userData) {
           // Jika ada data sesi, panggil API untuk validasi
-          const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getFotoProfile', {
+          const response = await Axios.get(BASE_URL.BASE_URL+'getFotoProfile', {
             headers: {
               Authorization: `Bearer ${JSON.parse(userData).token}`,
             },

@@ -15,7 +15,7 @@ const ShippingSelection = ({ route, navigation }) => {
         const formData = new FormData();
         formData.append('id_alamat', id_alamat);
         
-        const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/cekEkspedisi', formData, {
+        const response = await Axios.post(BASE_URL.BASE_URL+'cekEkspedisi', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log("====================")

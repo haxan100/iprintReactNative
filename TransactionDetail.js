@@ -25,7 +25,7 @@ const TransactionDetail = ({ route, navigation }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getTransaksiById',
+        url: BASE_URL.BASE_URL+'getTransaksiById',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

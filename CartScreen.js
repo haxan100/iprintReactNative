@@ -7,6 +7,7 @@ import { formatRupiah } from './utils/currencyUtils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from './utils/Api';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'; // Import MaterialCommunityIcons
+import BASE_URL from './config';
 
 const CartScreen = ({ navigation }) => {
   const [cartData, setCartData] = useState([]);
@@ -15,7 +16,7 @@ const CartScreen = ({ navigation }) => {
   useEffect(() => {
     const getCartData = async () => {
       try {
-        const response = await Api.get('https://heyiamhasan.com/porto/iprintNew/Api/getKeranjang');
+        const response = await Api.get(BASE_URL.BASE_URL+'getKeranjang');
         if (response.data && response.data.status) {
           setCartData(response.data.data);
         } else {
@@ -72,7 +73,7 @@ const CartScreen = ({ navigation }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/deleteKeranjang',
+        url: BASE_URL.BASE_URL+'deleteKeranjang',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

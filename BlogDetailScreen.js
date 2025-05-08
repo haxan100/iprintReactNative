@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import RenderHtml from 'react-native-render-html';
 import { useWindowDimensions } from 'react-native';
+import BASE_URL from './config';
 
 const BlogDetailScreen = ({ route, navigation }) => {
   const { blogId } = route.params;
@@ -22,7 +23,7 @@ const BlogDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     const getBlogById = async () => {
       try {
-        const response = await fetch(`https://heyiamhasan.com/porto/iprintNew/Api/getBlogById/${blogId}`);
+        const response = await fetch(BASE_URL.BASE_URL+`getBlogById/${blogId}`);
         const json = await response.json();
         console.log("=========================")
         console.log(json.data)

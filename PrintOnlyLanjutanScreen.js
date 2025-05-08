@@ -39,7 +39,7 @@ const PrintOnlyLanjutanScreen = ({ navigation, route }) => {
     try {
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/addKeranjang',
+        url: BASE_URL.BASE_URL+'addKeranjang',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

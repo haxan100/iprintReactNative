@@ -26,7 +26,7 @@ const VerificationScreen = ({ navigation, route }) => {
       formData.append('reset_pass_key', resetPassKey);
       formData.append('kode_otp', code);    
         const response = await Axios.post(
-          'https://heyiamhasan.com/porto/iprintNew/api/check_kode_otp',
+          BASE_URL.BASE_URL+'check_kode_otp',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );
