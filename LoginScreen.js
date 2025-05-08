@@ -71,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      console.log("responseeeee");
+      console.log(BASE_URL.BASE_URL + 'loginbyEmail');
       console.log(response.data);
       console.log("responseeeee");
       if (response.data.status) {

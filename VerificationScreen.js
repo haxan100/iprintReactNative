@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { BackHandler } from 'react-native';
 import Axios from 'axios';
 import FormData from 'form-data';
+import BASE_URL from './config';
 
 const VerificationScreen = ({ navigation, route }) => {
   console.log(route.params)

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure this package
 import { BackHandler } from 'react-native';
 import Axios from 'axios';
 import FormData from 'form-data';
+import BASE_URL from './config';
 
 const ResetPasswordScreen = ({ navigation, route }) => {
   useEffect(() => {
