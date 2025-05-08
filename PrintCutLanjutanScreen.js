@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator 
 import Axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 import { CommonActions } from '@react-navigation/native';
+import BASE_URL from './config';
 
 const PrintCutLanjutanScreen = ({ navigation, route }) => {
   const { image } = route.params; // Gambar dari halaman sebelumnya

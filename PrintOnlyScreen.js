@@ -78,7 +78,7 @@ const PrintOnlyScreen = ({ navigation,notificationCount }) => {
 const handleUploadPress = async () => {
   console.log("Meminta izin penyimpanan"); // Debug log
   const hasPermission = await requestStoragePermission();
-  console.log("Has permission: ", hasPermission); // Debug log
+  console.log("Has permississson: ", hasPermission); // Debug log
   if (!hasPermission) {
     Alert.alert("Izin diperlukan", "Aplikasi ini membutuhkan izin untuk mengakses galeri anda.");
     return;
