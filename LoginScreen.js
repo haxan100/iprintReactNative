@@ -15,16 +15,15 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import backgroundImage from './assets/images/bg.png';
 import AlertNotification from 'react-native-alert-notification';
 import CustomAlert from './utils/CustomAlert';
-import Axios from 'axios';
-import FormData from 'form-data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import API_CONFIG from './config/api';
 
 const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
         const userData = await AsyncStorage.getItem('userData');
-        console.log(userData)
+        console.log(userData);
         if (userData) {
           navigation.navigate('Home');
         }
@@ -56,29 +55,37 @@ const LoginScreen = ({ navigation }) => {
     }
 
     try {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
-
-      const response = await Axios({
-        method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/loginbyEmail',
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
+      console.log('Attempting login to original API...');
+      
+      const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.LOGIN}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'Accept': 'application/json'
+        },
+        body: `email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
       });
-
-      console.log(response.data);
-      if (response.data.status) {
-        CustomAlert.showAlert('Login Berhasil', `Selamat Datang! ${response.data.data.nama_user}`);
-
-        await AsyncStorage.setItem('userData', JSON.stringify(response.data.data));
-
+      
+      console.log('Response status:', response.status);
+      console.log('Response headers:', response.headers);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      console.log('Response data:', data);
+      
+      if (data.status) {
+        CustomAlert.showAlert('Login Berhasil', `Selamat Datang! ${data.data.nama_user}`);
+        await AsyncStorage.setItem('userData', JSON.stringify(data.data));
         navigation.navigate('Home');
       } else {
-        CustomAlert.showAlert('Login Gagal', `Gagal!! ${response.data.message}`);
+        CustomAlert.showAlert('Login Gagal', data.message || 'Login gagal');
       }
     } catch (error) {
-      CustomAlert.showAlert('Login Gagal', `Gagal ${error.message}`);
+      console.log('Login error:', error.message);
+      CustomAlert.showAlert('Login Gagal', `API Error: ${error.message}`);
     }
   };
 
@@ -117,7 +124,8 @@ const LoginScreen = ({ navigation }) => {
             autoCapitalize="none"
           />
           <TouchableOpacity onPress={togglePasswordVisibility} style={styles.eyeIcon}>
-            <FontAwesome name={eyeIcon} size={20} color="#BDBDBD" />
+            {/* <FontAwesome name={eyeIcon} size={20} color="#BDBDBD" /> */}
+            
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
