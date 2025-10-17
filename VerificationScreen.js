@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'reac
 import { BackHandler } from 'react-native';
 import Axios from 'axios';
 import FormData from 'form-data';
+import BASE_URL from './config';
 
 const VerificationScreen = ({ navigation, route }) => {
   console.log(route.params)
@@ -26,7 +27,7 @@ const VerificationScreen = ({ navigation, route }) => {
       formData.append('reset_pass_key', resetPassKey);
       formData.append('kode_otp', code);    
         const response = await Axios.post(
-          'https://heyiamhasan.com/porto/iprintNew/api/check_kode_otp',
+          BASE_URL.BASE_URL+'check_kode_otp',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );

@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet, TouchableOpacity, ActivityIndicator 
 import Axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 import { CommonActions } from '@react-navigation/native';
+import BASE_URL from './config';
 
 const PrintCutLanjutanScreen = ({ navigation, route }) => {
   const { image } = route.params; // Gambar dari halaman sebelumnya
@@ -32,7 +33,7 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    Axios.get('https://heyiamhasan.com/porto/iprintNew/api/kain_printing')
+    Axios.get(BASE_URL.BASE_URL+'kain_printing')
       .then(response => {
         setFabrics(response.data.data);
         setSelectedFabric(response.data.data[0].id_kain_and_printing); // Set default selected fabric
@@ -60,7 +61,7 @@ const PrintCutLanjutanScreen = ({ navigation, route }) => {
     try {
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/addKeranjang',
+        url: BASE_URL.BASE_URL+'addKeranjang',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

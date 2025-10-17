@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import Axios from 'axios';
+import BASE_URL from './config';
 
 const ShippingSelection = ({ route, navigation }) => {
   const [originDetails, setOriginDetails] = useState(null);
@@ -15,7 +16,7 @@ const ShippingSelection = ({ route, navigation }) => {
         const formData = new FormData();
         formData.append('id_alamat', id_alamat);
         
-        const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/cekEkspedisi', formData, {
+        const response = await Axios.post(BASE_URL.BASE_URL+'cekEkspedisi', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log("====================")

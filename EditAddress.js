@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert 
 import Axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
 import Toast from 'react-native-simple-toast';
+import BASE_URL from './config'; // Adjust the import path as necessary
 
 const EditAddress = ({ navigation, route }) => {
   const { id_alamat } = route.params;
@@ -31,7 +32,7 @@ const EditAddress = ({ navigation, route }) => {
       const formData = new FormData();
       formData.append('id_alamat', id_alamat);
 
-      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/getAlamat', formData, {
+      const response = await Axios.post(BASE_URL.BASE_URL+'getAlamat', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -57,7 +58,7 @@ const EditAddress = ({ navigation, route }) => {
 
   const fetchProvinsi = async () => {
     try {
-      const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getProvinsi');
+      const response = await Axios.get(BASE_URL.BASE_URL+'getProvinsi');
       if (response.data && response.data.status) {
         setProvinsiList(response.data.data);
       } else {
@@ -80,7 +81,7 @@ const EditAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getKabupatenByByProvinsi',
+        url: BASE_URL.BASE_URL+'getKabupatenByByProvinsi',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -106,7 +107,7 @@ const EditAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getKecamatanByIdKabupaten',
+        url: BASE_URL.BASE_URL+'getKecamatanByIdKabupaten',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -131,7 +132,7 @@ const EditAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getKelurahanByIdKecamatan',
+        url: BASE_URL.BASE_URL+'getKelurahanByIdKecamatan',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -161,7 +162,7 @@ const EditAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/editAlamat',
+        url: BASE_URL.BASE_URL+'editAlamat',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -178,7 +179,7 @@ const EditAddress = ({ navigation, route }) => {
       }
     } catch (error) {
       console.error('Error saving address:', error);
-      Alert.alert('Error', 'Terjadi kesalahan saat menyimpan data alamat');
+      Alert.alert('Error', 'Terjadi kesalahan saat menyimpan data alamat #2');
     }
   };
 

@@ -39,6 +39,7 @@ const LoginScreen = ({ navigation }) => {
   const [eyeIcon, setEyeIcon] = useState('eye-slash');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = () => {
     navigation.navigate('Register');
@@ -49,8 +50,11 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleLogin = async () => {
+    setIsLoading(true); // ⏳ mulai loading
     if (!email || !password) {
       CustomAlert.showAlert('Login Gagal', 'HARUS DI ISI SEMUA');
+      setIsLoading(false); // ✅ stop loading
+
       return;
     }
 
@@ -87,6 +91,7 @@ const LoginScreen = ({ navigation }) => {
       console.log('Login error:', error.message);
       CustomAlert.showAlert('Login Gagal', `API Error: ${error.message}`);
     }
+  
   };
 
   const togglePasswordVisibility = () => {
@@ -100,7 +105,7 @@ const LoginScreen = ({ navigation }) => {
       <View style={styles.container}>
         <Image
           source={{
-            uri: 'https://www.iprint.id/wp-content/uploads/2023/05/logo-iprint-blue.png',
+            uri: BASE_URL.IPRINT ,
           }}
           style={styles.logo}
         />
@@ -128,9 +133,15 @@ const LoginScreen = ({ navigation }) => {
             
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-          <Text style={styles.loginButtonText}>Log in</Text>
-        </TouchableOpacity>
+        <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={isLoading}>
+        {
+          isLoading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={styles.loginButtonText}>Log in</Text>
+          )
+        }
+      </TouchableOpacity>
         <TouchableOpacity style={styles.signUp} onPress={handleLupaPassword}>
           <Text style={styles.forgotPassword}>Lupa password?</Text>
         </TouchableOpacity>

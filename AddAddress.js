@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert } from 'react-native';
 import Axios from 'axios';
 import { Picker } from '@react-native-picker/picker';
+import BASE_URL from './config'; // Adjust the import path as necessary
 
 const AddAddress = ({ navigation, route }) => {
   const { fetchAddresses } = route.params;
@@ -23,7 +24,7 @@ const AddAddress = ({ navigation, route }) => {
   useEffect(() => {
     const fetchProvinsi = async () => {
       try {
-        const response = await Axios.get('https://heyiamhasan.com/porto/iprintNew/Api/getProvinsi');
+        const response = await Axios.get(BASE_URL.BASE_URL+'/getProvinsi');
         if (response.data && response.data.status) {
           setProvinsiList(response.data.data);
         } else {
@@ -48,7 +49,7 @@ const AddAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getKabupatenByByProvinsi',
+        url: BASE_URL.BASE_URL + 'getKabupatenByByProvinsi',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -74,7 +75,7 @@ const AddAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getKecamatanByIdKabupaten',
+        url: BASE_URL.BASE_URL+'getKecamatanByIdKabupaten',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -99,7 +100,7 @@ const AddAddress = ({ navigation, route }) => {
 
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/getKelurahanByIdKecamatan',
+        url: BASE_URL.BASE_URL+'getKelurahanByIdKecamatan',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
@@ -128,7 +129,7 @@ const AddAddress = ({ navigation, route }) => {
   
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/simpanAlamat',
+        url: BASE_URL.BASE_URL+'simpanAlamat',
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' ,},
       });

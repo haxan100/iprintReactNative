@@ -15,6 +15,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Toast } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
+import BASE_URL from './config';
 
 const getStatusColor = (status) => {
   switch (status) {
@@ -41,8 +42,8 @@ const HistoryScreen = ({ navigation }) => {
     try {
       const formData = new FormData();
       formData.append('status', status);
-
-      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/Api/ListRiwayatTransaksi', formData, {
+      console.log(BASE_URL.BASE_URL+'ListRiwayatTransaksi');
+      const response = await Axios.post(BASE_URL.BASE_URL+'ListRiwayatTransaksi', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 
@@ -62,6 +63,7 @@ const HistoryScreen = ({ navigation }) => {
         console.log('No orders data received:', response.data.message);
       }
     } catch (error) {
+      console.log(error);
       console.error('Error fetching orders data:', error);
     } finally {
       setDataLoading(false);

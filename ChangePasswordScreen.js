@@ -3,6 +3,8 @@ import { View, StyleSheet, TextInput, Text, TouchableOpacity, SafeAreaView } fro
 import Icon from 'react-native-vector-icons/Feather'; // You can use any other icon library
 import Axios from 'axios';
 import { Alert } from 'react-native';
+import BASE_URL from './config';
+
 const ChangePasswordScreen = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -27,7 +29,7 @@ const ChangePasswordScreen = ({ navigation }) => {
   
       const response = await Axios({
         method: 'post',
-        url: 'https://heyiamhasan.com/porto/iprintNew/Api/ganti_password_menu', // Replace with your API endpoint
+        url: BASE_URL.BASE_URL+'ganti_password_menu', // Replace with your API endpoint
         data: formData,
         headers: { 'Content-Type': 'multipart/form-data' },
       });

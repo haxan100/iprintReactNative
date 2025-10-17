@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import FormData from 'form-data';
 import Axios from 'axios';
+import BASE_URL from './config';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
     
         // Mengirim permintaan ke endpoint API
         const response = await Axios.post(
-          'https://heyiamhasan.com/porto/iprintNew/api/lupa_password',
+          BASE_URL.BASE_URL+'lupa_password',
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );

@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'; // Ensure this package
 import { BackHandler } from 'react-native';
 import Axios from 'axios';
 import FormData from 'form-data';
+import BASE_URL from './config';
 
 const ResetPasswordScreen = ({ navigation, route }) => {
   useEffect(() => {
@@ -43,7 +44,7 @@ const ResetPasswordScreen = ({ navigation, route }) => {
   
     try {
       const response = await Axios.post(
-        'https://heyiamhasan.com/porto/iprintNew/api/ganti_password',
+        BASE_URL.BASE_URL+'ganti_password',
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );

@@ -39,48 +39,46 @@ const PrintOnlyScreen = ({ navigation,notificationCount }) => {
     // });
   };
 
-  // Pastikan fungsi ini ada di luar komponen PrintOnlyScreen
-async function requestStoragePermission() {
-  if (Platform.OS === 'android') {
-    const readGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    );
-    const writeGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    );
-    const cameraGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    );
-    return readGranted === PermissionsAndroid.RESULTS.GRANTED &&
-           writeGranted === PermissionsAndroid.RESULTS.GRANTED &&
-           cameraGranted === PermissionsAndroid.RESULTS.GRANTED;
+  async function requestStoragePermission() {
+    if (Platform.OS === 'android') {
+      const sdkVersion = Platform.Version;
+      try {
+        if (sdkVersion >= 33) {
+          const imagePermission = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_MEDIA_IMAGES,
+            {
+              title: "Akses Galeri",
+              message: "Aplikasi membutuhkan akses ke galeri Anda.",
+              buttonNeutral: "Tanya Nanti",
+              buttonNegative: "Tolak",
+              buttonPositive: "Izinkan"
+            }
+          );
+          return imagePermission === PermissionsAndroid.RESULTS.GRANTED;
+        } else {
+          const readGranted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE
+          );
+          const cameraGranted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.CAMERA
+          );
+          return readGranted === PermissionsAndroid.RESULTS.GRANTED &&
+                 cameraGranted === PermissionsAndroid.RESULTS.GRANTED;
+        }
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    }
+    return true;
   }
-  return true;
-}
+  
 
-// Pastikan fungsi ini ada di luar komponen PrintOnlyScreen
-async function requestStoragePermission() {
-  if (Platform.OS === 'android') {
-    const readGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-    );
-    const writeGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-    );
-    const cameraGranted = await PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.CAMERA,
-    );
-    return readGranted === PermissionsAndroid.RESULTS.GRANTED &&
-           writeGranted === PermissionsAndroid.RESULTS.GRANTED &&
-           cameraGranted === PermissionsAndroid.RESULTS.GRANTED;
-  }
-  return true;
-}
 
 const handleUploadPress = async () => {
   console.log("Meminta izin penyimpanan"); // Debug log
   const hasPermission = await requestStoragePermission();
-  console.log("Has permission: ", hasPermission); // Debug log
+  console.log("Has permississson: ", hasPermission); // Debug log
   if (!hasPermission) {
     Alert.alert("Izin diperlukan", "Aplikasi ini membutuhkan izin untuk mengakses galeri anda.");
     return;

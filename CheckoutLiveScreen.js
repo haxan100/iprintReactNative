@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Api from './utils/Api';
 import FormData from 'form-data';
 import { formatRupiah } from './utils/currencyUtils';
+import BASE_URL from './config';
 
 const CheckoutLiveScreen = ({ navigation, route }) => {
   const { lebar, panjang, duplikasiMotif, deskripsi, image, tipe_kain, id_kain } = route.params;
@@ -28,7 +29,7 @@ const CheckoutLiveScreen = ({ navigation, route }) => {
       try {
         const response = await Axios({
           method: 'get',
-          url: `https://heyiamhasan.com/porto/iprintNew/Api/getAdminFee`,
+          url: BASE_URL.BASE_URL+`getAdminFee`,
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log("dddd");
@@ -60,7 +61,7 @@ const CheckoutLiveScreen = ({ navigation, route }) => {
         const response = await Axios({
           method: 'post',
           data: formData,
-          url: `https://heyiamhasan.com/porto/iprintNew/Api/getKainHarga`,
+          url: BASE_URL.BASE_URL+`getKainHarga`,
           headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log("wdwdwd");
@@ -115,7 +116,7 @@ const CheckoutLiveScreen = ({ navigation, route }) => {
         name: image.split('/').pop(),
       });
 
-      const response = await Axios.post('https://heyiamhasan.com/porto/iprintNew/api/CreateTransaksi', formData, {
+      const response = await Axios.post(BASE_URL.BASE_URL+'CreateTransaksi', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -150,6 +151,8 @@ const CheckoutLiveScreen = ({ navigation, route }) => {
       Alert.alert('Mohon pilih alamat terlebih dahulu');
       return;
     }
+    console.log("xxxxxxx");
+    console.log(selectedAddress);
     navigation.navigate('ShippingSelection', { setSelectedShipping, id_alamat: selectedAddress.id, setSelectedShippingongkir });
   };
 

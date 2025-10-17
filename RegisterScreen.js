@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView,Keyboar
 import Icon from 'react-native-vector-icons/FontAwesome5'; // Ensure this library is installed
 import { Alert } from 'react-native';
 import Axios from 'axios';
+import API from './config';
 
 const RegisterScreen = ({ navigation }) => {
   const [fullName, setFullName] = useState('');
@@ -35,7 +36,7 @@ const RegisterScreen = ({ navigation }) => {
     // Make the API call
     try {
       const response = await Axios.post(
-        'https://heyiamhasan.com/porto/iprintNew/Api/registerBiasa',
+         API.REGISTER,
         formData,
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
